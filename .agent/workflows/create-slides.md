@@ -10,9 +10,9 @@ This workflow generates the **NotebookLM-style** slide deck.
 ## Style Guidelines
 - **Visual**: Clean, concise, bullet-based.
 - **Content**: Concept-first, end-to-end story.
-- **Format**: Markdown (`.md`) AND PDF (`.pdf`).
+- **Format**: Markdown (`slides.md`) AND PDF (`slides.pdf`).
 
-## 1. Markdown Slides (`notebooklm_style_slides.md`)
+## 1. Markdown Slides (`slides.md`)
 **Mandatory Structure (14 Slides):**
 
 - **Slide 1: Title & Objective** (Goal + Learning outcomes)
@@ -30,10 +30,19 @@ This workflow generates the **NotebookLM-style** slide deck.
 - **Slide 13: Interview Key Takeaways** (Common Q&A)
 - **Slide 14: Conclusion** (Result + Next Steps)
 
-## 2. PDF Generation (`notebooklm_style_slides.pdf`)
+## 2. PDF Generation (`slides.pdf`)
 **Requirement:** Convert the markdown slides to a clean PDF.
 - Each slide = One Page.
 - Render Mermaid diagrams as images.
 - Use a clean, large font (e.g., Helvetica/Arial).
-- **Tooling:** Use a Python script with `reportlab` or `weasyprint`, OR use a browser-based print-to-pdf via a generated HTML file.
+- **Tooling:** Use Python script with UV: `uv run python generate_pdf.py`
 - **Validation:** Ensure diagrams are visible and text is not cut off.
+
+## UV Execution
+```powershell
+# Navigate to project slides directory
+cd c:\masai\<project_name>\slides
+
+# Run PDF generation script with UV
+uv run python generate_slides_pdf.py
+```

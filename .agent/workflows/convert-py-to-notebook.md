@@ -7,6 +7,29 @@ description: Convert Python script to teaching-oriented Jupyter Notebook with ST
 This workflow converts a `.py` file into a beginner-friendly, teaching-oriented Jupyter Notebook.
 **CRITICAL:** You must follow "User Rules Section 3, 4, 5, 6, 7" without deviation.
 
+---
+
+## ⚠️ ABSOLUTE RULE: MARKDOWN BEFORE EVERY CODE CELL
+
+> [!CAUTION]
+> **EVERY SINGLE CODE CELL MUST HAVE A MARKDOWN CELL IMMEDIATELY BEFORE IT.**
+> - NO code cell is allowed without a preceding markdown cell.
+> - This is NON-NEGOTIABLE.
+> - If you create a code cell without a markdown cell before it, YOU HAVE FAILED.
+
+### Notebook Cell Structure (MANDATORY):
+```
+[Markdown Cell] → [Code Cell] → [Markdown Cell] → [Code Cell] → ...
+```
+
+**NEVER:**
+```
+[Code Cell] → [Code Cell]  ❌ WRONG!
+[Code Cell] without Markdown before it  ❌ WRONG!
+```
+
+---
+
 ## Prerequisites
 - Source Python file path.
 - Target output directory (must be initialized via `/create-project-structure`).
@@ -37,9 +60,18 @@ The FIRST cell in the notebook MUST be Markdown containing:
 ```
 
 ### 3. 🧱 Block-by-Block Conversion
-For **EVERY** logical block of code (including imports):
 
-#### A. The Explanation Cell (Markdown)
+> [!IMPORTANT]
+> For **EVERY** logical block of code (including imports), you MUST create cells in this EXACT order:
+> 1. **FIRST**: Create a Markdown cell (explanation)
+> 2. **THEN**: Create a Code cell (implementation)
+> 3. **REPEAT** for every block
+
+#### A. The Explanation Cell (Markdown) - MANDATORY FIRST
+
+> [!CAUTION]
+> **CREATE THIS MARKDOWN CELL BEFORE THE CODE CELL. NO EXCEPTIONS.**
+
 **Rule:** Section 5 (Per-Line Rules).
 Before the code cell, create a Markdown cell. For **IMPORTANT LINES**, use this EXACT structure:
 
@@ -103,7 +135,45 @@ For every explanation, ensure you answer:
 - **WHERE?** (Industry)
 - **HOW?** (Syntax/Internals)
 
-### 5. 📎 Final Polish
+### 5. 📎 Final Polish & Validation
+
+#### ✅ MANDATORY VALIDATION CHECKLIST:
+Before saving the notebook, verify:
+
+| Check | Requirement |
+|-------|-------------|
+| ☐ | Every code cell has a markdown cell IMMEDIATELY before it |
+| ☐ | No two consecutive code cells exist |
+| ☐ | First cell is markdown (Problem Statement) |
+| ☐ | Imports have explanation markdown before them |
+| ☐ | All functions have argument explanations (3.1-3.7) |
+| ☐ | All important lines have 2.1-2.7 explanations |
+
+> [!WARNING]
+> If ANY code cell lacks a preceding markdown cell, the notebook is INCOMPLETE.
+> Go back and add the missing markdown cells.
+
 - Ensure **NO code line** exists without a preceding explanation.
 - Verify **all metadata** (imports, variable names) are linked to correct concepts.
 - **Save** as `.ipynb` in the `notebook/` folder.
+
+---
+
+## 📋 Cell Pattern Template
+
+Use this pattern for EVERY section of code:
+
+```
+┌─────────────────────────────────┐
+│  MARKDOWN CELL                  │ ← Always First
+│  - Section title                │
+│  - 2.1-2.7 explanations         │
+│  - 3.1-3.7 argument details     │
+└─────────────────────────────────┘
+┌─────────────────────────────────┐
+│  CODE CELL                      │ ← Always Second
+│  - Actual Python code           │
+└─────────────────────────────────┘
+```
+
+**REPEAT this pattern for the entire notebook.**

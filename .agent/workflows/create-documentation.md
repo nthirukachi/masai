@@ -1,54 +1,194 @@
 ---
-description: Create the 4 mandatory documentation files (Section 11) with strict content requirements.
+description: Create the 7 mandatory documentation files (Section 11) with strict content requirements.
 ---
 
 # Create Documentation Files Workflow
 
-This workflow generates the **4 Mandatory Documentation Files** required by User Rules Section 11.
+This workflow generates the **7 Mandatory Documentation Files**.
 **Location:** `<project_name>/documentation/`
 
-## 1. `problem_statement.md`
-**Purpose:** The WHAT and WHY.
+## Important Rule: Explain Like Teaching a 10-Year-Old
+- **NO unexplained jargon** - Every technical term MUST be explained in simple words
+- Use **real-life analogies** (games, school, toys, food)
+- Use **Mermaid diagrams** wherever possible for visual understanding
+
+---
+
+## Execution Order (STRICT)
+
+### 1. `Original_Problem.md` (FIRST - MANDATORY)
+**Purpose:** Preserve the EXACT user input.
+**Content:** 
+- Copy-paste the EXACT problem statement/usecase provided by the user
+- NO modifications, NO additional explanations
+- Just the raw problem as given
+
+---
+
+### 2. `problem_statement.md`
+**Purpose:** The WHAT and WHY (simplified).
 **Required Sections:**
-1.  **Problem Statement**: Define problem, reason, and business relevance.
-2.  **Steps to Solve**: Step-by-step reasoning and sub-problems.
-3.  **Expected Output**: detailed output description and samples.
-4.  **Exam Focus Points**: Key lines to remember, typical questions.
+1.  **Problem Statement**: Define problem like explaining to a child
+2.  **Real-Life Analogy**: Compare to everyday situations
+3.  **Steps to Solve**: Simple step-by-step breakdown
+4.  **Expected Output**: What we expect (with examples)
+5.  **Mermaid Diagram**: Flow of the problem → solution
 
-## 2. `concepts_explained.md` (CORE THEORY)
+---
+
+### 3. `concepts_explained.md` (CORE THEORY)
 **Purpose:** Deep dive into every concept and import.
-**Structure:** For **EACH** concept/import, you MUST include these **12 Points**:
-1.  **Definition**: Simple, exam-friendly.
-2.  **Why it is used**: Problem solved.
-3.  **When to use it**: Best conditions.
-4.  **Where to use it**: Real-world/Industry.
-5.  **Is this the only way?**: Alternatives table.
-6.  **Explanation with Diagrams**: Mermaid/ASCII flow.
-7.  **How to use it**: Syntax + Code snippet.
-8.  **How it works internally**: Step-by-step memory/process.
-9.  **Visual Summary**: Bullet/Flow recap.
-10. **Advantages**: Strengths.
-11. **Disadvantages**: Limitations.
-12. **Exam & Interview Points**: 3-5 memorizable points, Q&A.
+**Important:** Every jargon word MUST have a "Simple Explanation" box.
 
-## 3. `observations_and_conclusion.md`
+**Structure:** For **EACH** concept/import, include these **12 Points**:
+1.  **Definition**: Simple, 10-year-old friendly
+2.  **Simple Analogy**: Like what in real life?
+3.  **Why it is used**: What problem it solves
+4.  **When to use it**: Best conditions
+5.  **Where to use it**: Real-world examples
+6.  **Is this the only way?**: Alternatives comparison table
+7.  **Mermaid Diagram**: Visual explanation
+8.  **How to use it**: Syntax + Simple code example
+9.  **How it works internally**: Step-by-step (like recipe steps)
+10. **Visual Summary**: Bullet/Flow recap
+11. **Advantages & Disadvantages**: Pros/Cons table
+12. **Jargon Glossary**: All technical terms explained simply
+
+---
+
+### 4. `observations_and_conclusion.md`
 **Purpose:** Interpreting the results.
 **Required Sections:**
-1.  **Execution Output**: Actual raw output.
-2.  **Output Explanation**: Visual breakdown/diagrams of what happened.
-3.  **Observations**: Patterns/Trends noticed.
-4.  **Insights**: Business meaning/Decisions to be made.
-5.  **Conclusion**: Summary and next steps.
-6.  **Exam Focus Points**: How to interpret this in an exam.
+1.  **Execution Output**: Actual raw output
+2.  **Output Explanation**: What does each number/result mean?
+3.  **Mermaid Diagram**: Visual flow of results
+4.  **Observations**: Patterns noticed (simple language)
+5.  **Insights**: What actions to take based on results
+6.  **Conclusion**: Summary in simple words
 
-## 4. `interview_preparation.md`
-**Purpose:** Assessment readiness.
+---
+
+### 5. `interview_questions.md` (NEW - SEPARATE FILE)
+**Purpose:** 10-20 Interview Questions with thorough answers.
+**Format for EACH Question:**
+
+```markdown
+## Q1: [Question Title]
+
+### 🎯 The Question
+[Exact interview question]
+
+### 💡 Simple Answer (For 10-Year-Old)
+[Explain like teaching a child]
+
+### 📚 Technical Answer (For Interviewer)
+[Detailed technical explanation]
+
+### 🎨 Mermaid Diagram
+[Visual explanation using Mermaid]
+
+### 🌍 Real-Life Analogy
+[Compare to everyday situation]
+
+### ⚠️ Common Mistakes
+[What NOT to say]
+
+### ✅ Key Points to Remember
+- Point 1
+- Point 2
+- Point 3
+```
+
+**Minimum:** 10-20 questions covering:
+- Basic concept questions (What is...?)
+- Why/When questions (Why do we use...?)
+- How questions (How does... work?)
+- Comparison questions (Difference between A and B?)
+- Scenario questions (What would happen if...?)
+- Troubleshooting questions (How to fix...?)
+
+---
+
+### 6. `exam_preparation.md` (NEW - SEPARATE FILE)
+**Purpose:** Practice questions for exams.
+**Required Question Types:**
+
+#### Section A: Multiple Choice Questions (MCQ) - 10+ Questions
+```markdown
+## MCQ 1
+**Question:** [Question text]
+
+**Options:**
+- A) Option 1
+- B) Option 2
+- C) Option 3
+- D) Option 4
+
+**✅ Correct Answer:** [Letter]
+
+**📖 Explanation:** [Why this is correct - simple language]
+
+**❌ Why Others Are Wrong:**
+- A) [Why wrong]
+- B) [Why wrong]
+...
+```
+
+#### Section B: Multiple Select Questions (MSQ) - 5+ Questions
+```markdown
+## MSQ 1
+**Question:** [Question text] (Select ALL that apply)
+
+**Options:**
+- A) Option 1
+- B) Option 2
+- C) Option 3
+- D) Option 4
+- E) Option 5
+
+**✅ Correct Answers:** [Letters, e.g., A, C, D]
+
+**📖 Explanation:** [Why each correct option is correct]
+```
+
+#### Section C: Numerical/Calculation Questions - 5+ Questions
+```markdown
+## Numerical 1
+**Question:** [Question with numbers]
+
+**Given:**
+- Value 1 = X
+- Value 2 = Y
+
+**Solution Steps:**
+1. Step 1: [Calculation]
+2. Step 2: [Calculation]
+3. Step 3: [Final answer]
+
+**✅ Final Answer:** [Number with units]
+
+**🎨 Mermaid Diagram:** [If helpful for understanding]
+```
+
+#### Section D: Fill in the Blanks - 5+ Questions
+```markdown
+## Fill 1
+**Question:** The process of _______ is used to...
+
+**Answer:** [Correct word/phrase]
+
+**Explanation:** [Simple explanation]
+```
+
+---
+
+### 7. `interview_preparation.md` (QUICK REVISION)
+**Purpose:** One-page quick revision sheet.
 **Required Sections:**
-1.  **High-Level Summary**: 2-3 lines problem, 3-4 bullets solution.
-2.  **Core Concepts (Interview View)**: What/Why/When/When NOT.
-3.  **FAQ**: Question + Simple Answer + Analogy.
-4.  **Parameter Questions**: Why param exists? What if removed? Default behaviors.
-5.  **Comparisons (Tables)**: e.g., List vs Array, Fit vs Transform.
-6.  **Common Mistakes**: Traps and Trick questions.
-7.  **Output Interpretation**: "Tell me about this graph..." answers.
-8.  **One-Page Revision**: 10-minute read bullet points.
+1.  **30-Second Summary**: Entire topic in 5-6 bullets
+2.  **Key Terms Glossary**: Technical word → Simple meaning
+3.  **Most Important Points**: Top 10 things to remember
+4.  **Quick Comparison Tables**: Side-by-side comparisons
+5.  **Formula/Syntax Cheat Sheet**: Copy-paste ready
+6.  **Common Interview Traps**: What NOT to say
+7.  **Mermaid Summary Diagram**: Visual overview
