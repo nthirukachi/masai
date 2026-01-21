@@ -1,0 +1,247 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>ReLU vs Leaky ReLU</title>
+    <style>
+        @page {
+            size: A4 landscape;
+            margin: 1cm;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, sans-serif;
+            background: #1a1a2e;
+            color: #eee;
+            margin: 0;
+            padding: 20px;
+        }
+        .slide {
+            background: linear-gradient(135deg, #16213e 0%, #1a1a2e 100%);
+            border-radius: 15px;
+            padding: 30px 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            page-break-after: always;
+            min-height: 500px;
+        }
+        h1 {
+            color: #00ff88;
+            font-size: 28px;
+            border-bottom: 3px solid #00ff88;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #4cc9f0;
+            font-size: 24px;
+            margin-top: 20px;
+        }
+        h3 {
+            color: #f72585;
+            font-size: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: rgba(255,255,255,0.05);
+        }
+        th {
+            background: #4361ee;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #333;
+        }
+        tr:nth-child(even) {
+            background: rgba(255,255,255,0.03);
+        }
+        code {
+            background: #0f0f23;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Consolas', monospace;
+            color: #00ff88;
+        }
+        pre {
+            background: #0f0f23;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            border-left: 4px solid #4361ee;
+        }
+        pre code {
+            padding: 0;
+            background: none;
+        }
+        ul, ol {
+            padding-left: 25px;
+        }
+        li {
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+        strong {
+            color: #ffd60a;
+        }
+        blockquote {
+            border-left: 4px solid #f72585;
+            padding-left: 20px;
+            margin: 20px 0;
+            font-style: italic;
+            color: #aaa;
+        }
+        .highlight {
+            background: linear-gradient(90deg, #4361ee, #f72585);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body>
+<div class="slide"><h1>ReLU vs Leaky ReLU: Investigating the Dying ReLU Problem</h1>
+</div>
+<div class="slide">
+<h2>Slide 1: Title & Objective</h2></p><p><h3>Investigating the Dying ReLU Problem</h3></p><p><strong>Objective</strong>: Understand why neurons can "die" in neural networks and how to prevent it.</p><p><strong>What We'll Learn</strong>:
+<li>What is ReLU and how it works</li>
+<li>The dying ReLU problem</li>
+<li>How Leaky ReLU solves it</li>
+<li>Building a neural network from scratch</li>
+</div>
+<div class="slide">
+<h2>Slide 2: Problem Statement</h2></p><p><h3>The Dying ReLU Problem</h3></p><p><strong>Simple Explanation</strong>:
+Imagine workers in a factory who follow this rule:
+<li>"If I get a positive number, I pass it along"</li>
+<li>"If I get a negative number, I output zero"</li></p><p><strong>The Problem</strong>: Some workers get stuck outputting zero forever!</p><p><pre><code>flowchart LR
+    A[Negative Input] --> B[ReLU: Output 0]
+    B --> C[Gradient: 0]
+    C --> D[No Learning!]
+    D --> E[Neuron DEAD]</code></pre>
+</div>
+<div class="slide">
+<h2>Slide 3: Real-World Use Case</h2></p><p><h3>Where This Matters</h3></p><p><table>
+<tr><th>Domain</th><th>Application</th></tr>
+<tr><td>Image Recognition</td><td>CNNs with many ReLU layers</td></tr>
+<tr><td>Speech Recognition</td><td>Deep audio processing networks</td></tr>
+<tr><th>NLP</th><th>Transformer encoder layers</th></tr>
+<tr><th>Autonomous Vehicles</th><th>Real-time object detection</th></tr>
+</table></p><p><strong>Risk</strong>: Dead neurons = wasted computational resources + reduced accuracy
+</div>
+<div class="slide">
+<h2>Slide 4: Input Data</h2></p><p><h3>Dataset Description</h3></p><p><pre><code>np.random.seed(42)
+X_train = np.random.randn(1000, 10)  # 1000 samples, 10 features
+y_train = (X_train[:, 0] + X_train[:, 1] - X_train[:, 2] > 0).astype(int)</code></pre></p><p><table>
+<tr><th>Attribute</th><th>Value</th></tr>
+<tr><td>Samples</td><td>1000</td></tr>
+<tr><td>Features</td><td>10 (can be negative!)</td></tr>
+<tr><th>Classes</th><th>2 (binary: 0 or 1)</th></tr>
+<tr><th>Distribution</th><th>~50% positive, ~50% negative</th></tr>
+</table>
+</div>
+<div class="slide">
+<h2>Slide 5: Concepts Used (High Level)</h2></p><p><h3>Key Concepts Overview</h3></p><p><pre><code>flowchart TD
+    A[Activation Functions] --> B[ReLU]
+    A --> C[Leaky ReLU]
+    
+    D[Neural Network] --> E[Forward Propagation]
+    D --> F[Backward Propagation]
+    
+    G[The Problem] --> H[Dying ReLU]
+    G --> I[Dead Neurons]
+    
+    J[The Solution] --> K[Leaky ReLU]
+    J --> L[He Initialization]</code></pre>
+</div>
+<div class="slide">
+<h2>Slide 6: Concepts Breakdown</h2></p><p><h3>ReLU vs Leaky ReLU</h3></p><p><table>
+<tr><th>Aspect</th><th>ReLU</th><th>Leaky ReLU</th></tr>
+<tr><td>Formula</td><td>max(0, z)</td><td>max(αz, z)</td></tr>
+<tr><td>Positive inputs</td><td>Pass through</td><td>Pass through</td></tr>
+<tr><th>Negative inputs</th><th>→ 0</th><th>→ αz (1% leak)</th></tr>
+<tr><th>Gradient (z ≤ 0)</th><th><strong>0</strong></th><th><strong>α = 0.01</strong></th></tr>
+<tr><th>Dead neurons?</th><th><strong>Yes</strong></th><th><strong>No</strong></th></tr>
+</table></p><p><strong>Key Insight</strong>: The tiny leak (1%) keeps neurons alive!
+</div>
+<div class="slide">
+<h2>Slide 7: Step-by-Step Solution Flow</h2></p><p><h3>Implementation Steps</h3></p><p><pre><code>flowchart TD
+    A[1. Generate Dataset] --> B[2. Implement ReLU & Leaky ReLU]
+    B --> C[3. Build Neural Network Class]
+    C --> D[4. Train with ReLU - 200 epochs]
+    D --> E[5. Train with Leaky ReLU - 200 epochs]
+    E --> F[6. Count Dead Neurons]
+    F --> G[7. Compare Accuracy]
+    G --> H[8. Plot Loss Curves]
+    H --> I[9. Write Analysis]</code></pre>
+</div>
+<div class="slide">
+<h2>Slide 8: Code Logic Summary</h2></p><p><h3>Key Functions</h3></p><p><pre><code><h1>ReLU - Simple but risky</h1>
+def relu(z):
+    return np.maximum(0, z)  # 0 for negatives</p><p><h1>Leaky ReLU - Safe choice</h1>
+def leaky_relu(z, alpha=0.01):
+    return np.where(z > 0, z, alpha * z)  # 1% leak</p><p><h1>Dead Neuron Detection</h1>
+def count_dead_neurons(network, X):
+    activations = network.forward(X)
+    return np.sum(np.all(activations == 0, axis=0))</code></pre>
+</div>
+<div class="slide">
+<h2>Slide 9: Important Functions & Parameters</h2></p><p><h3>Critical Parameters</h3></p><p><table>
+<tr><th>Parameter</th><th>Value</th><th>Meaning</th></tr>
+<tr><td>hidden_size</td><td>20</td><td>Number of hidden neurons</td></tr>
+<tr><td>learning_rate</td><td>0.01</td><td>Step size for updates</td></tr>
+<tr><th>n_epochs</th><th>200</th><th>Training iterations</th></tr>
+<tr><th>alpha</th><th>0.01</th><th>Leak factor (1%)</th></tr>
+</table></p><p><h3>Network Architecture</h3>
+<pre><code>Input(10) → Hidden(20, ReLU/LeakyReLU) → Output(1, Sigmoid)</code></pre>
+</div>
+<div class="slide">
+<h2>Slide 10: Execution Output</h2></p><p><h3>Results Summary</h3></p><p><table>
+<tr><th>Metric</th><th>ReLU</th><th>Leaky ReLU</th></tr>
+<tr><td>Final Loss</td><td>0.5149</td><td>0.5416</td></tr>
+<tr><td>Accuracy</td><td>73.10%</td><td>72.70%</td></tr>
+<tr><th>Dead Neurons</th><th>0/20 (0%)</th><th>0/20 (0%)</th></tr>
+</table></p><p><h3>Loss Curve Comparison</h3>
+Both networks converged smoothly with similar performance.
+</div>
+<div class="slide">
+<h2>Slide 11: Observations & Insights</h2></p><p><h3>Key Observations</h3></p><p><li><strong>Similar Performance</strong>: Both achieved ~73% accuracy</li>
+<li><strong>No Dead Neurons</strong>: Xavier initialization prevented dying</li>
+<li><strong>Smooth Convergence</strong>: Both loss curves decreased steadily</li></p><p><h3>Insights</h3></p><p><li><strong>Initialization matters</strong>: Proper init can prevent dying ReLU</li>
+<li><strong>Leaky ReLU is insurance</strong>: Guaranteed safety with minimal cost</li>
+<li><strong>Deep networks need more care</strong>: Dying ReLU more common there</li>
+</div>
+<div class="slide">
+<h2>Slide 12: Advantages & Limitations</h2></p><p><h3>ReLU</h3></p><p><table>
+<tr><th>Advantages</th><th>Limitations</th></tr>
+<tr><td>Fast computation</td><td>Dead neuron risk</td></tr>
+<tr><td>Simple formula</td><td>Zero-centered output</td></tr>
+<tr><th>Sparsity</th><th>Unbounded output</th></tr>
+</table></p><p><h3>Leaky ReLU</h3></p><p><table>
+<tr><th>Advantages</th><th>Limitations</th></tr>
+<tr><td>No dead neurons</td><td>Extra hyperparameter</td></tr>
+<tr><td>Gradient always flows</td><td>Slightly more complex</td></tr>
+<tr><th>Safe for deep nets</th><th>Not always better</th></tr>
+</table>
+</div>
+<div class="slide">
+<h2>Slide 13: Interview Key Takeaways</h2></p><p><h3>Top 5 Interview Points</h3></p><p><li><strong>ReLU = max(0, z)</strong> - Zeros out negatives</li>
+<li><strong>Dying ReLU</strong> = Neurons stuck at 0, never recover</li>
+<li><strong>Leaky ReLU</strong> adds α (0.01) leak for negatives</li>
+<li><strong>Gradient = 0</strong> is the problem; gradient = α is the solution</li>
+<li><strong>He initialization</strong> is best for ReLU networks</li></p><p><h3>Quick Decision</h3></p><p><li>Standard case → ReLU</li>
+<li>Deep network or production → Leaky ReLU</li>
+</div>
+<div class="slide">
+<h2>Slide 14: Conclusion</h2></p><p><h3>Summary</h3></p><p>✅ Successfully implemented ReLU and Leaky ReLU from scratch  
+✅ Built a 2-layer neural network  
+✅ Demonstrated that both work well with proper initialization  
+✅ Leaky ReLU provides insurance against dead neurons  </p><p><h3>Key Message</h3></p><p>> "Leaky ReLU is a small modification to ReLU that provides big safety benefits, especially in deep networks."</p><p><h3>Next Steps</h3>
+<li>Try deeper networks to see more dying ReLU</li>
+<li>Experiment with different alpha values</li>
+<li>Compare with ELU, SELU, and Swish</li>
+</div>
+
+</body>
+</html>

@@ -133,6 +133,12 @@ This workflow orchestrates the creation of a full teaching project. It STRICTLY 
 **Location:** `<project_name>/slides/slides.pdf`
 **Action:** Generate PDF from slides.md using Python script with UV
 
+> [!CAUTION]
+> **DO NOT USE BROWSER FOR PDF GENERATION**
+> - ❌ No Playwright, Selenium, or Chrome headless
+> - ✅ Use Python libraries: **FPDF2** or **ReportLab**
+> - Run: `uv add fpdf2` then `uv run python generate_slides_pdf.py`
+
 ---
 
 ## Python Execution with UV
