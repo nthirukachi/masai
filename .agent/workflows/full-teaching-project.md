@@ -139,6 +139,13 @@ This workflow orchestrates the creation of a full teaching project. It STRICTLY 
 > - ✅ Use Python libraries: **FPDF2** or **ReportLab**
 > - Run: `uv add fpdf2` then `uv run python generate_slides_pdf.py`
 
+### Step 13: 🧹 Cleanup Temporary Files
+**Action:** Delete generator scripts after artifacts are created.
+```powershell
+Remove-Item <project_name>/generate_notebook.py, <project_name>/generate_slides_pdf.py -Force
+```
+- These files are temporary helpers and should NOT be committed to source control.
+
 ---
 
 ## Python Execution with UV
