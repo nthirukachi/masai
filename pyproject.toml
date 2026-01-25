@@ -30,3 +30,8 @@ dependencies = [
     "torch>=2.9.1",
     "tqdm>=4.67.1",
 ]
+
+[tool.uv.workspace]
+members = [
+    "AI_Crop_Health_Monitoring",
+]

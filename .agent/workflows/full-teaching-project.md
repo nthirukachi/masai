@@ -78,6 +78,12 @@ This workflow orchestrates the creation of a full teaching project. It STRICTLY 
 - Jargon glossary with simple explanations
 - Mermaid diagrams for each concept
 - Real-life analogies
+- **Advantages & Disadvantages WITH PROOF:**
+  - Each advantage/disadvantage must include:
+    - Claim (what is being stated)
+    - Proof (code example, comparison table, or numbers)
+    - Real-life analogy
+    - When it matters (practical scenario)
 
 ### Step 7: 📊 observations_and_conclusion.md
 **Location:** `<project_name>/documentation/observations_and_conclusion.md`

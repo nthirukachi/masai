@@ -51,7 +51,12 @@ This workflow generates the **7 Mandatory Documentation Files**.
 8.  **How to use it**: Syntax + Simple code example
 9.  **How it works internally**: Step-by-step (like recipe steps)
 10. **Visual Summary**: Bullet/Flow recap
-11. **Advantages & Disadvantages**: Pros/Cons table
+11. **Advantages & Disadvantages (WITH PROOF)**: 
+    - Each advantage/disadvantage MUST have:
+      - **Claim**: What is being claimed
+      - **Proof**: Code example, comparison table, or numerical evidence
+      - **Real-Life Analogy**: Why this matters in simple terms
+      - **When it matters**: Practical scenarios
 12. **Jargon Glossary**: All technical terms explained simply
 
 ---
