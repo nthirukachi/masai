@@ -135,21 +135,11 @@ This workflow orchestrates the creation of a full teaching project. It STRICTLY 
 **Location:** `<project_name>/slides/slides.md`
 **Content:** NotebookLM-style 14-slide structure with Mermaid diagrams
 
-### Step 12: 📑 slides.pdf
-**Location:** `<project_name>/slides/slides.pdf`
-**Action:** Generate PDF from slides.md using Python script with UV
+> [!NOTE]
+> **PDF generation is SKIPPED** - User prefers markdown slides only.
 
-> [!CAUTION]
-> **DO NOT USE BROWSER FOR PDF GENERATION**
-> - ❌ No Playwright, Selenium, or Chrome headless
-> - ✅ Use Python libraries: **FPDF2** or **ReportLab**
-> - Run: `uv add fpdf2` then `uv run python generate_slides_pdf.py`
-
-### Step 13: 🧹 Cleanup Temporary Files
-**Action:** Delete generator scripts after artifacts are created.
-```powershell
-Remove-Item <project_name>/generate_notebook.py, <project_name>/generate_slides_pdf.py -Force
-```
+### Step 12: 🧹 Cleanup Temporary Files (if any)
+**Action:** Delete any generator scripts after artifacts are created.
 - These files are temporary helpers and should NOT be committed to source control.
 
 ---
@@ -183,7 +173,6 @@ uv run python src/<project_name>.py
 - [ ] `exam_preparation.md` has MCQ/MSQ/Numerical/Fill-in-blanks
 - [ ] `interview_preparation.md` is quick revision ready
 - [ ] `slides.md` has 14 slides
-- [ ] `slides.pdf` is generated and readable
 - [ ] All technical terms are explained simply (10-year-old test)
 
 ---

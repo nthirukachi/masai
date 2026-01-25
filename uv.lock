@@ -5,6 +5,7 @@ requires-python = ">=3.13"
 [manifest]
 members = [
     "ai-crop-health-monitoring",
+    "ai-landing-zone-safety",
     "forestfiresmokedetection",
     "masai",
 ]
@@ -25,6 +26,27 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "fpdf2", specifier = ">=2.8.5" },
+    { name = "matplotlib", specifier = ">=3.10.8" },
+    { name = "numpy", specifier = ">=2.4.1" },
+    { name = "pandas", specifier = ">=2.3.3" },
+    { name = "scikit-learn", specifier = ">=1.8.0" },
+    { name = "seaborn", specifier = ">=0.13.2" },
+]
+
+[[package]]
+name = "ai-landing-zone-safety"
+version = "0.1.0"
+source = { virtual = "AILandingZoneSafety" }
+dependencies = [
+    { name = "matplotlib" },
+    { name = "numpy" },
+    { name = "pandas" },
+    { name = "scikit-learn" },
+    { name = "seaborn" },
+]
+
+[package.metadata]
+requires-dist = [
     { name = "matplotlib", specifier = ">=3.10.8" },
     { name = "numpy", specifier = ">=2.4.1" },
     { name = "pandas", specifier = ">=2.3.3" },

@@ -35,4 +35,5 @@ dependencies = [
 members = [
     "AI_Crop_Health_Monitoring",
     "ForestFireSmokeDetection",
+    "AILandingZoneSafety",
 ]
