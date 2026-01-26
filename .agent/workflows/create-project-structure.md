@@ -6,10 +6,34 @@ description: Set up the mandatory folder structure (Section 10) with UV venv sup
 
 This workflow sets up the **Mandatory Folder Structure** (Rule Section 10).
 
+## Project Naming Convention (MANDATORY)
+
+### Format: `MQ<number>_<FolderName>`
+
+**Rules:**
+1. **Prefix**: Always start with `MQ` followed by a sequential number
+2. **Number**: Increment from the last project (check existing folders in `c:\masai\`)
+3. **Separator**: Use underscore `_` after the number
+4. **FolderName**: Descriptive name using PascalCase with underscores
+
+**Examples:**
+```
+MQ1_Perceptron_From_Scratch
+MQ2_Sigmoid_vs_ReLU_Activation
+MQ3_Vanishing_Gradient_Analysis
+MQ4_CNN_Image_Classification
+MQ5_LSTM_Text_Generation
+```
+
+**Before creating a project:**
+1. List existing folders in `c:\masai\` to find the highest MQ number
+2. Increment by 1 for the new project
+3. Apply the naming convention
+
 ## Execution Steps
 
 ### 1. Root Directory
-Create `<project_name>/` under `c:\masai\`.
+Create `MQ<number>_<project_name>/` under `c:\masai\`.
 
 ### 2. Sub-directories
 Create the following EXACT folder tree:
