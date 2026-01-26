@@ -1,0 +1,27 @@
+
+PERCEPTRON LEARNING DYNAMICS ANALYSIS (150-200 words)
+===============================================================================
+
+The Perceptron was trained for 40 epochs on 480 samples with 
+learning rate = 0.01. A total of 699 weight updates 
+were performed during training.
+
+KEY OBSERVATIONS:
+
+1. CONVERGENCE PATTERN: The model achieved high accuracy quickly because the 
+   dataset has class_sep=2.0, making it linearly separable. Early epochs show 
+   many updates as the model corrects its initial random mistakes.
+
+2. UPDATE COUNT INSIGHT: With 699 total updates across 40 epochs 
+   (average of 17.5 per epoch), we see the classic 
+   Perceptron behavior - updates decrease as the model finds the correct boundary.
+
+3. LEARNING RATE IMPACT: The chosen LR of 0.01 provides stable convergence. 
+   A higher LR (e.g., 0.1) might converge faster but risk oscillation. A lower LR 
+   (e.g., 0.001) would require more epochs for convergence.
+
+4. FINAL PERFORMANCE: Test accuracy of 98.33% confirms the model 
+   generalizes well to unseen data, meeting the 95% success criterion.
+
+The Perceptron successfully learned a linear decision boundary, demonstrating 
+its effectiveness on linearly separable data.
