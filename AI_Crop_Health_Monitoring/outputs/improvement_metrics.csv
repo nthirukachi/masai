@@ -1,0 +1,8 @@
+Improvement Area,Current ROC-AUC,Expected ROC-AUC,Implementation Effort,Business Impact
+Expanded Dataset (10x),0.9820665445665445,0.98,Medium (40 hrs),High - Better generalization
+Multi-temporal Features,0.9820665445665445,0.98,High (80 hrs),Very High - Early detection
+Weather Integration,0.9820665445665445,0.98,Low (20 hrs),Medium - Stress explanation
+XGBoost Model,0.9820665445665445,0.98,Low (10 hrs),Medium - Better accuracy
+Ensemble Methods,0.9820665445665445,0.99,Medium (40 hrs),High - Robust predictions
+SHAP Explanations,0.9820665445665445,0.9820665445665445,Low (15 hrs),Very High - Farmer trust
+Field Validation,0.9820665445665445,0.99,High (100 hrs),Critical - Production ready

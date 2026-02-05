@@ -19,13 +19,66 @@ This workflow orchestrates the creation of a full teaching project. It STRICTLY 
 - Use Mermaid diagrams wherever possible for visual understanding
 - Every concept should have at least one diagram
 
+### Rule 4: Dependency Management (MANDATORY)
+- **ALL** packages must be added to `C:\masai\requirements.txt`.
+- **NEVER** install packages individually with `pip install` or `uv pip install <package>`.
+- **ALWAYS** update `requirements.txt` and then run `uv pip install -r C:\masai\requirements.txt`.
+
 ---
 
-## Execution Order (STRICT - 10 Steps)
+
+
+## Python Execution with UV
+
+**IMPORTANT:** This project uses UV virtual environment and centralized dependencies.
+
+### 1. To activate virtual environment
+```powershell
+.venv\Scripts\activate
+```
+
+### 2. Manage Dependencies
+- Add any new packages to `C:\masai\requirements.txt`.
+- Sync dependencies:
+```powershell
+uv add -r C:\masai\requirements.txt
+```
+
+### 3. Run Python scripts
+```powershell
+# Navigate to project directory
+cd c:\masai\<project_name>
+
+# 4Run with UV (uses the central environment)
+uv run src/<project_name>.py
+```
+**Format:** `MQ<number>_<FolderName>`
+
+- **MQ**: Fixed prefix for all projects
+- **<number>**: Sequential number (check existing folders in `c:\masai\` for highest)
+- **<FolderName>**: Descriptive PascalCase name with underscores
+
+**Example sequence:**
+```
+MQ1_Perceptron_From_Scratch
+MQ2_Sigmoid_vs_ReLU_Activation  
+MQ3_Vanishing_Gradient_Analysis
+MQ4_CNN_Image_Classification
+```
+
+**Before creating a project:**
+1. Run `Get-ChildItem c:\masai\ -Directory | Where-Object { $_.Name -match '^MQ\d+' } | Sort-Object Name` to find the highest MQ number
+2. Increment by 1 for the new project
+3. Apply the naming convention
+
+---
+
+## Execution Order (STRICT - 13 Steps)
 
 ### Step 1: 🏗️ Create Project Structure
 **Workflow:** `/create-project-structure`
-- Creates `c:\masai\<project_name>\`
+- **First**: Check existing MQ numbers in `c:\masai\`
+- Creates `c:\masai\MQ<number>_<project_name>\`
 - Creates subfolders: `notebook/`, `src/`, `documentation/`, `slides/`, `outputs/`
 - Creates `README.md` with project overview
 
@@ -130,7 +183,15 @@ This workflow orchestrates the creation of a full teaching project. It STRICTLY 
 - Cheat sheet
 - Mermaid summary diagram
 
-### Step 11: 🎴 slides.md
+### Step 11: 🏫 classroom.md
+**Workflow:** `/classroom-simulation`
+**Location:** `<project_name>/documentation/classroom.md`
+**Content:**
+- Telglish dialogue (Teacher + 6 Student Roles)
+- Mermaid diagrams for visual explanation
+- Full Assessment (MCQ, MSQ, Numerical) with Answer Keys
+
+### Step 12: 🎴 slides.md
 **Workflow:** `/create-slides`
 **Location:** `<project_name>/slides/slides.md`
 **Content:** NotebookLM-style 14-slide structure with Mermaid diagrams
@@ -138,24 +199,13 @@ This workflow orchestrates the creation of a full teaching project. It STRICTLY 
 > [!NOTE]
 > **PDF generation is SKIPPED** - User prefers markdown slides only.
 
-### Step 12: 🧹 Cleanup Temporary Files (if any)
+### Step 13: 🧹 Cleanup Temporary Files (if any)
 **Action:** Delete any generator scripts after artifacts are created.
 - These files are temporary helpers and should NOT be committed to source control.
 
 ---
 
-## Python Execution with UV
 
-**IMPORTANT:** This project uses UV virtual environment.
-
-### Run Python scripts with UV:
-```powershell
-# Navigate to project directory
-cd c:\masai\<project_name>
-
-# Run with UV
-uv run python src/<project_name>.py
-```
 
 ---
 
@@ -172,6 +222,7 @@ uv run python src/<project_name>.py
 - [ ] `interview_questions.md` has 10-20 Q&A with diagrams
 - [ ] `exam_preparation.md` has MCQ/MSQ/Numerical/Fill-in-blanks
 - [ ] `interview_preparation.md` is quick revision ready
+- [ ] `classroom_simulation.md` created with Telglish dialogue & Mermaid diagrams
 - [ ] `slides.md` has 14 slides
 - [ ] All technical terms are explained simply (10-year-old test)
 

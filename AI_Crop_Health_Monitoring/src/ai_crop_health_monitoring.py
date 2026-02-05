@@ -23,6 +23,24 @@ to look at those photos and say "Healthy" or "Stressed" for each area.
 """
 
 # ==============================================================================
+# SECTION 0: CONFIGURE UTF-8 ENCODING (Windows Fix)
+# ==============================================================================
+# 
+# 📘 WHAT IS THIS?
+# Windows console may not support UTF-8 by default, causing emoji errors.
+# This fixes Unicode encoding issues on Windows.
+#
+# ==============================================================================
+
+import sys
+import io
+
+# Fix Windows console UTF-8 encoding for emoji support
+if sys.platform == 'win32':
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
+
+# ==============================================================================
 # SECTION 1: IMPORT LIBRARIES
 # ==============================================================================
 # 
@@ -164,6 +182,19 @@ import os
 # ------------------------------------------------------------------------------
 import warnings
 warnings.filterwarnings('ignore')
+
+# ------------------------------------------------------------------------------
+# 2.1 WHAT: Import ssl to handle secure connections
+# 2.2 WHY: Fixes "certificate verify failed" errors when downloading data
+#          Common on Windows or restricted networks
+# 2.3 WHEN: Downloading data from HTTPS URLs
+# 2.4 WHERE: Global setup
+# 2.5 HOW: ssl._create_default_https_context = ssl._create_unverified_context
+# 2.6 INTERNAL: Sets global default context to unverified
+# 2.7 OUTPUT: Prevents URLError
+# ------------------------------------------------------------------------------
+import ssl
+ssl._create_default_https_context = ssl._create_unverified_context
 
 print("=" * 60)
 print("🌾 AI-BASED CROP HEALTH MONITORING SYSTEM")
@@ -944,7 +975,7 @@ Based on the stress analysis, here are the recommended drone actions:
 print(recommendations)
 
 # Save recommendations to file
-with open(os.path.join(OUTPUT_DIR, 'drone_recommendations.txt'), 'w') as f:
+with open(os.path.join(OUTPUT_DIR, 'drone_recommendations.txt'), 'w', encoding='utf-8') as f:
     f.write("DRONE INSPECTION STRATEGY\n")
     f.write("=" * 50 + "\n\n")
     f.write("STRESS CATEGORY DISTRIBUTION:\n")
@@ -957,69 +988,670 @@ print(f"✅ Recommendations saved to {OUTPUT_DIR}/drone_recommendations.txt")
 # ==============================================================================
 # SECTION 13: REFLECTION AND LIMITATIONS (TASK 5)
 # ==============================================================================
+# 
+# 📘 WHAT IS THIS SECTION?
+# This section provides a comprehensive reflection on the AI Crop Health
+# Monitoring project, discussing:
+# - Current approach limitations
+# - Real-world data challenges
+# - Proposed improvements with implementation examples
+# - Quantitative metrics for measuring improvement
+# - Future roadmap for production deployment
+#
+# ==============================================================================
 
 print("\n" + "=" * 60)
 print("📝 TASK 5: REFLECTION")
+print("==" * 30)
+print("🎯 Comprehensive Analysis of Limitations & Proposed Improvements")
 print("=" * 60)
 
-reflection = """
-LIMITATIONS OF THIS APPROACH:
------------------------------
-1. 📊 Dataset Size:
-   - Small dataset may not capture all stress patterns
-   - More data would improve model generalization
+# ------------------------------------------------------------------------------
+# PART A: DETAILED LIMITATIONS ANALYSIS
+# ------------------------------------------------------------------------------
 
-2. 🕐 Temporal Aspects:
-   - Single time snapshot - no seasonal variation
-   - Stress changes over time not captured
+limitations_detailed = """
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                           LIMITATIONS ANALYSIS                                ║
+╚══════════════════════════════════════════════════════════════════════════════╝
 
-3. 🌍 Geographic Specificity:
-   - Model trained on one field/region
-   - May not transfer to different climates or crops
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 📊 LIMITATION 1: DATASET SIZE & REPRESENTATIVENESS                          │
+└─────────────────────────────────────────────────────────────────────────────┘
 
-4. 🔬 Ground Truth:
-   - Labels may have some uncertainty
-   - Field validation not included
+CURRENT STATE:
+- Our dataset contains a limited number of samples
+- May not capture rare stress patterns (e.g., localized pest infestations)
+- Class imbalance may affect model performance on minority class
 
-5. 🌱 Crop Type:
-   - Single crop type assumed
-   - Different crops have different index thresholds
+REAL-WORLD IMPACT:
+- Model may miss edge cases that occur in < 5% of fields
+- False negatives on rare but serious diseases could be costly
+- Example: Late blight in potatoes can destroy 100% yield in 2 weeks
 
-PROPOSED IMPROVEMENTS:
-----------------------
-1. 📈 More Data:
-   - Collect data across multiple seasons
-   - Include multiple fields and crop types
+QUANTITATIVE CONCERN:
+┌────────────────────────┬─────────────────────────────────────────────────┐
+│ Metric                 │ Concern                                          │
+├────────────────────────┼─────────────────────────────────────────────────┤
+│ Sample size            │ May need 10,000+ samples for robust model       │
+│ Geographic coverage    │ Currently single field - need regional data     │
+│ Stress type coverage   │ Only 2 classes - real world has 10+ conditions  │
+└────────────────────────┴─────────────────────────────────────────────────┘
 
-2. 🛰️ Multi-temporal Analysis:
-   - Track changes over time
-   - Detect stress progression
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 🕐 LIMITATION 2: TEMPORAL DIMENSION MISSING                                  │
+└─────────────────────────────────────────────────────────────────────────────┘
 
-3. 🔍 Additional Features:
-   - Weather data integration
-   - Soil sensor data
-   - Historical yield data
+CURRENT STATE:
+- Single time-point snapshot
+- No seasonal variation captured
+- Stress progression patterns not modeled
 
-4. 🤖 Advanced Models:
-   - Try XGBoost, LightGBM for comparison
-   - Deep learning for texture features
-   - Ensemble methods for robustness
+REAL-WORLD IMPACT:
+- Cannot detect EARLY stress before visual symptoms
+- Miss growth-stage specific problems
+- Example: Wheat rust detection window is only 48-72 hours for intervention
 
-5. ✅ Validation:
-   - Field verification of predictions
-   - Agronomist expert review
-   - A/B testing of recommendations
+WHAT WE'RE MISSING:
+┌────────────────────────┬─────────────────────────────────────────────────┐
+│ Temporal Feature       │ Agricultural Importance                          │
+├────────────────────────┼─────────────────────────────────────────────────┤
+│ NDVI trend (3-week)    │ Detects early declining health before critical  │
+│ Phenological stage     │ Flowering stress vs vegetative stress differ    │
+│ Weather correlation    │ Stress often follows 5-7 days after heat event  │
+│ Recovery patterns      │ Some stress is temporary (wilting mid-day)      │
+└────────────────────────┴─────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 🌍 LIMITATION 3: GEOGRAPHIC & ENVIRONMENTAL SPECIFICITY                     │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+CURRENT STATE:
+- Trained on single geographic location
+- Specific soil type and climate zone
+- May not generalize to other regions
+
+TRANSFER LEARNING CHALLENGE:
+- A model trained in Iowa (USA) may fail in Punjab (India)
+- Soil color, background, and vegetation vary globally
+
+REGIONAL VARIATIONS EXAMPLE:
+┌────────────────────────┬─────────────────────────────────────────────────┐
+│ Region                 │ NDVI Threshold for "Healthy"                    │
+├────────────────────────┼─────────────────────────────────────────────────┤
+│ Midwest USA (Corn)     │ > 0.65 during peak season                       │
+│ Tropical Asia (Rice)   │ > 0.55 (different canopy structure)             │
+│ Mediterranean (Grape)  │ > 0.45 (sparse training, row crops)             │
+│ Arid regions (Wheat)   │ > 0.40 (water stress is normal baseline)        │
+└────────────────────────┴─────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 🔬 LIMITATION 4: GROUND TRUTH UNCERTAINTY                                    │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+CURRENT STATE:
+- Labels may have been assigned with subjective criteria
+- No standardized stress severity scale used
+- Inter-annotator agreement not measured
+
+LABEL QUALITY CONCERNS:
+┌────────────────────────┬─────────────────────────────────────────────────┐
+│ Issue                  │ Impact                                          │
+├────────────────────────┼─────────────────────────────────────────────────┤
+│ Subjective labeling    │ Same plant rated "Stressed" by one, "Healthy"  │
+│                        │ by another annotator                            │
+│ Temporal mismatch      │ Satellite captured at 10am, field visit at 3pm │
+│ Spatial resolution     │ 10m pixel may contain mixed health zones        │
+│ Annotation bias        │ Annotators may focus on obvious symptoms only  │
+└────────────────────────┴─────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 🌱 LIMITATION 5: SINGLE CROP TYPE ASSUMPTION                                 │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+CURRENT STATE:
+- Model assumes homogeneous crop type
+- Index thresholds are crop-specific
+- Mixed cropping systems not handled
+
+CROP-SPECIFIC CHALLENGES:
+┌────────────────────────┬─────────────────────────────────────────────────┐
+│ Crop Type              │ Unique Characteristics                          │
+├────────────────────────┼─────────────────────────────────────────────────┤
+│ Cereals (wheat, rice)  │ Dense canopy, high NDVI in tillering stage     │
+│ Legumes (soybean)      │ Yellow leaves in maturity are NORMAL           │
+│ Vegetables (tomato)    │ Sparse spacing, soil visible through canopy    │
+│ Orchards (apple)       │ Permanent crop with annual variation           │
+│ Cotton                 │ NDVI drops during boll opening (normal)        │
+└────────────────────────┴─────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 🛰️ LIMITATION 6: SATELLITE DATA RESOLUTION CONSTRAINTS                     │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+CURRENT STATE:
+- Using derived indices from moderate resolution imagery
+- Cloud cover can cause data gaps
+- Atmospheric effects not fully corrected
+
+RESOLUTION TRADE-OFFS:
+┌────────────────────────┬────────────────┬───────────────────────────────────┐
+│ Resolution             │ Use Case       │ Limitation                        │
+├────────────────────────┼────────────────┼───────────────────────────────────┤
+│ 10m (Sentinel-2)       │ Field-level    │ Cannot detect individual plants   │
+│ 3m (PlanetScope)       │ Plot-level     │ Expensive, lower spectral bands   │
+│ 0.3m (Drone)           │ Plant-level    │ Limited coverage, weather depend  │
+└────────────────────────┴────────────────┴───────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ ⚙️ LIMITATION 7: MODEL INTERPRETABILITY                                     │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+CURRENT STATE:
+- Random Forest provides feature importance
+- But doesn't explain WHY a specific prediction was made
+- Farmers need actionable explanations
+
+EXPLAINABILITY GAP:
+- "Your crop is stressed" → NOT ACTIONABLE
+- "Your crop is stressed due to low moisture in zone A" → ACTIONABLE
+- Need: SHAP values, LIME explanations for individual predictions
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 📡 LIMITATION 8: REAL-TIME PROCESSING NOT IMPLEMENTED                       │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+CURRENT STATE:
+- Batch processing only
+- No integration with live satellite feeds
+- Manual data download required
+
+PRODUCTION REQUIREMENTS:
+- Auto-ingest new satellite data every 2-5 days
+- Trigger alerts when stress detected
+- Update recommendations based on latest imagery
 """
 
-print(reflection)
+print(limitations_detailed)
 
-# Save reflection to file
-with open(os.path.join(OUTPUT_DIR, 'reflection.txt'), 'w') as f:
-    f.write("PROJECT REFLECTION AND LIMITATIONS\n")
-    f.write("=" * 50 + "\n")
-    f.write(reflection)
+# ------------------------------------------------------------------------------
+# PART B: PROPOSED IMPROVEMENTS WITH REAL-WORLD DATA
+# ------------------------------------------------------------------------------
 
-print(f"✅ Reflection saved to {OUTPUT_DIR}/reflection.txt")
+improvements_detailed = """
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                     PROPOSED IMPROVEMENTS WITH REAL-WORLD DATA               ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 📈 IMPROVEMENT 1: EXPAND DATASET WITH REAL-WORLD DATA SOURCES               │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+DATA SOURCES TO INTEGRATE:
+┌────────────────────────┬─────────────────────────────────────────────────────┐
+│ Source                 │ Data Type & Access                                  │
+├────────────────────────┼─────────────────────────────────────────────────────┤
+│ Sentinel-2 (ESA)       │ Free 10m multispectral, 5-day revisit              │
+│ Landsat (USGS)         │ Free 30m, 40+ years historical                      │
+│ PlanetScope            │ Paid 3m daily, excellent for time-series           │
+│ MODIS (NASA)           │ Free 250m-1km, daily for NDVI trends               │
+│ OpenWeather API        │ Weather data for correlation                        │
+│ ISRIC/SoilGrids        │ Global soil property maps                          │
+│ FAO GAUL               │ Administrative boundaries for regional models      │
+└────────────────────────┴─────────────────────────────────────────────────────┘
+
+IMPLEMENTATION CODE EXAMPLE:
+```python
+# Example: Loading real Sentinel-2 data via Google Earth Engine
+import ee
+ee.Initialize()
+
+# Define field boundary
+field = ee.Geometry.Rectangle([77.0, 28.0, 77.1, 28.1])
+
+# Get Sentinel-2 Surface Reflectance
+s2 = ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED') \\
+    .filterBounds(field) \\
+    .filterDate('2024-01-01', '2024-12-31') \\
+    .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 20))
+
+# Calculate NDVI time series
+def add_ndvi(image):
+    ndvi = image.normalizedDifference(['B8', 'B4']).rename('NDVI')
+    return image.addBands(ndvi)
+
+s2_ndvi = s2.map(add_ndvi)
+```
+
+EXPECTED IMPROVEMENT:
+- 10x more samples → Accuracy improvement of 5-10%
+- Multi-site data → Better generalization
+- Historical data → Weather-stress correlation
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 🕐 IMPROVEMENT 2: IMPLEMENT MULTI-TEMPORAL ANALYSIS                          │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+APPROACH:
+- Collect time-series of 10-20 images per growing season
+- Calculate temporal features: trends, volatility, phenological markers
+- Detect EARLY stress before it becomes severe
+
+NEW TEMPORAL FEATURES:
+┌────────────────────────┬─────────────────────────────────────────────────────┐
+│ Feature                │ Calculation                                         │
+├────────────────────────┼─────────────────────────────────────────────────────┤
+│ ndvi_slope_7day        │ Linear regression slope over past 7 days           │
+│ ndvi_deviation         │ Current NDVI - historical average for this date    │
+│ recovery_rate          │ Speed of NDVI increase after stress event          │
+│ peak_ndvi_date         │ Day of year when NDVI reaches maximum              │
+│ growing_degree_days    │ Accumulated heat units from weather data           │
+└────────────────────────┴─────────────────────────────────────────────────────┘
+
+IMPLEMENTATION CONCEPT:
+```python
+# Time-series feature engineering
+import pandas as pd
+
+# Sample multi-temporal data structure
+temporal_data = {
+    'grid_id': ['A1'] * 10,
+    'date': pd.date_range('2024-06-01', periods=10, freq='5D'),
+    'ndvi': [0.45, 0.48, 0.52, 0.55, 0.53, 0.48, 0.42, 0.38, 0.35, 0.32]
+}
+
+df_temp = pd.DataFrame(temporal_data)
+
+# Calculate 7-day NDVI slope (stress indicator)
+df_temp['ndvi_slope'] = df_temp['ndvi'].rolling(3).apply(
+    lambda x: (x.iloc[-1] - x.iloc[0]) / 2
+)
+
+# Negative slope = EARLY WARNING of stress developing
+# Trigger alert when slope < -0.02 for 2 consecutive periods
+```
+
+EXPECTED IMPROVEMENT:
+- Early detection 2-3 weeks before visual symptoms
+- 90%+ accuracy for stress progression prediction
+- Reduced false positives from temporary stress
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 🌦️ IMPROVEMENT 3: INTEGRATE WEATHER & ENVIRONMENTAL DATA                    │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+WEATHER FEATURES TO ADD:
+┌────────────────────────┬─────────────────────────────────────────────────────┐
+│ Feature                │ Agricultural Significance                           │
+├────────────────────────┼─────────────────────────────────────────────────────┤
+│ temp_max_7day          │ Heat stress accumulation                            │
+│ precip_total_7day      │ Recent rainfall (drought/flood risk)               │
+│ vapor_pressure_deficit │ Evapotranspiration stress indicator                │
+│ humidity_min           │ Disease risk (fungal infections)                   │
+│ wind_speed_max         │ Physical damage / lodging risk                     │
+│ frost_nights_count     │ Cold damage in sensitive growth stages             │
+└────────────────────────┴─────────────────────────────────────────────────────┘
+
+REAL-WORLD DATA SOURCE - OpenWeather API:
+```python
+import requests
+import pandas as pd
+
+API_KEY = 'your_api_key'
+LAT, LON = 28.6139, 77.2090  # Example: Delhi
+
+# Get historical weather for past 7 days
+url = f'https://api.openweathermap.org/data/2.5/onecall/timemachine?lat={LAT}&lon={LON}&dt={{timestamp}}&appid={API_KEY}'
+
+# Create weather features
+weather_features = {
+    'temp_max_7day': 38.5,       # Celsius
+    'precip_total_7day': 5.2,    # mm
+    'humidity_avg': 65,          # %
+}
+
+# Combine with vegetation indices
+# When temp_max_7day > 35 and precip_7day < 10mm → HIGH STRESS RISK
+```
+
+EXPECTED IMPROVEMENT:
+- Better explanation of stress causes
+- Predict stress 5-7 days in advance
+- Reduce false positives by 30%
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 🤖 IMPROVEMENT 4: ADVANCED MACHINE LEARNING MODELS                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+MODEL COMPARISON ROADMAP:
+┌─────────────────────────┬────────────┬───────────┬─────────────────────────┐
+│ Model                   │ Complexity │ Speed     │ Best Use Case           │
+├─────────────────────────┼────────────┼───────────┼─────────────────────────┤
+│ Random Forest (current) │ Medium     │ Fast      │ Baseline, explainable   │
+│ XGBoost                 │ Medium     │ Fast      │ Higher accuracy         │
+│ LightGBM                │ Medium     │ Very Fast │ Large datasets          │
+│ CatBoost                │ Medium     │ Fast      │ Categorical features    │
+│ CNN (image input)       │ High       │ Slow      │ Raw satellite imagery   │
+│ LSTM (time series)      │ High       │ Medium    │ Temporal predictions    │
+│ Transformer             │ Very High  │ Slow      │ State-of-the-art        │
+└─────────────────────────┴────────────┴───────────┴─────────────────────────┘
+
+IMPLEMENTATION - XGBoost COMPARISON:
+```python
+from xgboost import XGBClassifier
+from sklearn.model_selection import cross_val_score
+import numpy as np
+
+# XGBoost model for comparison
+xgb_model = XGBClassifier(
+    n_estimators=100,
+    max_depth=6,
+    learning_rate=0.1,
+    objective='binary:logistic',
+    random_state=42
+)
+
+# Compare with Random Forest
+rf_scores = cross_val_score(model, X, y, cv=5, scoring='roc_auc')
+xgb_scores = cross_val_score(xgb_model, X, y, cv=5, scoring='roc_auc')
+
+print(f"Random Forest ROC-AUC: {np.mean(rf_scores):.4f}")
+print(f"XGBoost ROC-AUC: {np.mean(xgb_scores):.4f}")
+```
+
+EXPECTED IMPROVEMENT:
+- 3-5% accuracy improvement with XGBoost
+- 10-15% improvement with ensemble methods
+- CNNs could enable raw image input (no feature engineering)
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 🔍 IMPROVEMENT 5: EXPLAINABLE AI (XAI) FOR FARMERS                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+CURRENT GAP:
+- Model says "Stressed" but doesn't explain WHY
+- Farmers need actionable insights
+
+SOLUTION - SHAP VALUES:
+```python
+import shap
+
+# Create SHAP explainer for Random Forest
+explainer = shap.TreeExplainer(model)
+shap_values = explainer.shap_values(X_test)
+
+# For a single prediction, show which features contributed
+# Example output: "This area is stressed because:
+#   - Moisture Index is 0.15 (critically low) - contributing +0.35
+#   - NDVI is 0.28 (below healthy threshold) - contributing +0.25
+#   - SAVI is 0.31 (low vegetation) - contributing +0.15
+
+# Visualize
+shap.summary_plot(shap_values, X_test, feature_names=FEATURE_COLUMNS)
+```
+
+FARMER-FRIENDLY OUTPUT:
+```
+📍 Grid Location: X=15, Y=23
+🔴 Prediction: STRESSED (89% confidence)
+
+📊 STRESS CAUSES:
+┌────────────────────────┬────────────────────────────────────────────────┐
+│ Factor                 │ Explanation                                     │
+├────────────────────────┼────────────────────────────────────────────────┤
+│ 💧 Moisture (0.15)     │ CRITICAL: 70% below healthy level              │
+│ 🌿 NDVI (0.28)         │ WARNING: Vegetation vigor declining            │
+│ ☀️ Recent Temperature  │ Heat wave (38°C for 5 days) preceded stress   │
+└────────────────────────┴────────────────────────────────────────────────┘
+
+🎯 RECOMMENDED ACTION: Immediate irrigation (20mm)
+```
+
+EXPECTED IMPROVEMENT:
+- Farmer trust and adoption increased
+- Precision interventions (right action at right place)
+- Reduced chemical usage through targeted application
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ ✅ IMPROVEMENT 6: PRODUCTION-GRADE VALIDATION FRAMEWORK                      │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+VALIDATION REQUIREMENTS FOR REAL DEPLOYMENT:
+┌────────────────────────┬─────────────────────────────────────────────────────┐
+│ Validation Type        │ Implementation                                      │
+├────────────────────────┼─────────────────────────────────────────────────────┤
+│ Spatial cross-val      │ Train on fields A,B,C → Test on field D            │
+│ Temporal cross-val     │ Train on 2022-2023 → Test on 2024                  │
+│ Field verification     │ Ground truth from agronomist field visits          │
+│ A/B testing            │ Compare AI vs traditional disease detection        │
+│ Continuous monitoring  │ Track model performance over seasons              │
+└────────────────────────┴─────────────────────────────────────────────────────┘
+
+METRICS DASHBOARD CONCEPT:
+```python
+production_metrics = {
+    'accuracy_overall': 0.85,
+    'precision_stressed': 0.78,
+    'recall_stressed': 0.92,  # Critical - don't miss stressed areas
+    'false_positive_rate': 0.15,
+    'early_detection_rate': 0.75,
+    'farmer_adoption_rate': 0.45,
+    'intervention_success_rate': 0.82
+}
+```
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 📡 IMPROVEMENT 7: REAL-TIME PROCESSING PIPELINE                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+PRODUCTION ARCHITECTURE:
+```
+┌─────────────┐     ┌──────────────┐     ┌─────────────┐     ┌─────────────┐
+│ Satellite   │────▶│ Cloud        │────▶│ ML Pipeline │────▶│ Alert       │
+│ Data Feed   │     │ Processing   │     │ (Model)     │     │ System      │
+│ (Sentinel)  │     │ (GEE/AWS)    │     │             │     │ (SMS/App)   │
+└─────────────┘     └──────────────┘     └─────────────┘     └─────────────┘
+      │                    │                    │                    │
+      │                    │                    │                    │
+      ▼                    ▼                    ▼                    ▼
+   Auto-ingest         Preprocess          Predict            Farmer gets
+   every 5 days        NDVI, EVI           stress             SMS alert
+```
+
+IMPLEMENTATION STEPS:
+1. Google Earth Engine for satellite data processing
+2. AWS/GCP for model hosting
+3. API backend for mobile app
+4. SMS/WhatsApp integration for farmer alerts
+"""
+
+print(improvements_detailed)
+
+# ------------------------------------------------------------------------------
+# PART C: IMPLEMENTATION ROADMAP
+# ------------------------------------------------------------------------------
+
+roadmap = """
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                         IMPLEMENTATION ROADMAP                                ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          PHASE 1: SHORT-TERM (1-3 MONTHS)                    │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+✅ COMPLETED:
+[x] Random Forest model with vegetation indices
+[x] Stress heatmap visualization
+[x] Drone inspection recommendations
+[x] Basic feature importance analysis
+
+🔄 NEXT STEPS:
+[ ] Add XGBoost/LightGBM model comparison
+[ ] Implement SHAP explanations
+[ ] Integrate weather data API
+[ ] Create validation sampling framework
+
+ESTIMATED EFFORT: 40-60 hours
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          PHASE 2: MEDIUM-TERM (3-6 MONTHS)                   │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+🎯 GOALS:
+[ ] Multi-temporal analysis with 10+ time steps
+[ ] Expand to 5+ fields for regional model
+[ ] Field validation with agronomist team
+[ ] Mobile app prototype for farmer alerts
+
+KEY MILESTONES:
+- Month 4: Multi-field model trained and validated
+- Month 5: Time-series features integrated
+- Month 6: Farmer pilot program launch
+
+ESTIMATED EFFORT: 200-300 hours
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          PHASE 3: LONG-TERM (6-12 MONTHS)                    │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+🚀 PRODUCTION DEPLOYMENT:
+[ ] Real-time satellite data pipeline
+[ ] Multi-crop, multi-region models
+[ ] Deep learning integration (CNN/LSTM)
+[ ] Commercial API for agribusiness
+
+SUCCESS METRICS:
+┌────────────────────────┬─────────────────────────────────────────────────────┐
+│ KPI                    │ Target                                              │
+├────────────────────────┼─────────────────────────────────────────────────────┤
+│ Model accuracy         │ > 90% on held-out test set                         │
+│ Early detection rate   │ > 80% (2+ weeks before visual symptoms)            │
+│ Farmer adoption        │ > 500 farmers using the system                     │
+│ Yield improvement      │ > 10% compared to baseline                         │
+│ False positive rate    │ < 10% to maintain farmer trust                     │
+└────────────────────────┴─────────────────────────────────────────────────────┘
+"""
+
+print(roadmap)
+
+# ------------------------------------------------------------------------------
+# PART D: QUANTITATIVE METRICS FOR IMPROVEMENT TRACKING
+# ------------------------------------------------------------------------------
+
+print("\n" + "-" * 60)
+print("📊 QUANTITATIVE METRICS FOR IMPROVEMENT TRACKING")
+print("-" * 60)
+
+# Create metrics dataframe for improvement tracking
+improvement_metrics = pd.DataFrame({
+    'Improvement Area': [
+        'Expanded Dataset (10x)',
+        'Multi-temporal Features',
+        'Weather Integration',
+        'XGBoost Model',
+        'Ensemble Methods',
+        'SHAP Explanations',
+        'Field Validation'
+    ],
+    'Current ROC-AUC': [roc_auc, roc_auc, roc_auc, roc_auc, roc_auc, roc_auc, roc_auc],
+    'Expected ROC-AUC': [
+        min(roc_auc + 0.08, 0.98),  # More data
+        min(roc_auc + 0.10, 0.98),  # Temporal features
+        min(roc_auc + 0.05, 0.98),  # Weather
+        min(roc_auc + 0.05, 0.98),  # XGBoost
+        min(roc_auc + 0.10, 0.99),  # Ensemble
+        roc_auc,                      # SHAP doesn't improve accuracy
+        min(roc_auc + 0.15, 0.99),  # Validated + cleaned labels
+    ],
+    'Implementation Effort': [
+        'Medium (40 hrs)',
+        'High (80 hrs)',
+        'Low (20 hrs)',
+        'Low (10 hrs)',
+        'Medium (40 hrs)',
+        'Low (15 hrs)',
+        'High (100 hrs)'
+    ],
+    'Business Impact': [
+        'High - Better generalization',
+        'Very High - Early detection',
+        'Medium - Stress explanation',
+        'Medium - Better accuracy',
+        'High - Robust predictions',
+        'Very High - Farmer trust',
+        'Critical - Production ready'
+    ]
+})
+
+print("\n📈 IMPROVEMENT IMPACT MATRIX:")
+print(improvement_metrics.to_string(index=False))
+
+# Save comprehensive reflection to file
+reflection_comprehensive = f"""
+╔══════════════════════════════════════════════════════════════════════════════╗
+║           AI CROP HEALTH MONITORING - COMPREHENSIVE REFLECTION               ║
+║                         Task 5: Limitations & Improvements                    ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+DATE: {pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S')}
+MODEL PERFORMANCE: ROC-AUC = {roc_auc:.4f}
+
+{limitations_detailed}
+
+{improvements_detailed}
+
+{roadmap}
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                              FINAL SUMMARY                                    ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+KEY TAKEAWAYS:
+==============
+1. CURRENT MODEL STRENGTHS:
+   - Good baseline performance with Random Forest
+   - Feature importance provides interpretability
+   - Successfully identifies stressed areas
+
+2. CRITICAL GAPS TO ADDRESS:
+   - Temporal dimension missing (early detection)
+   - Single field limits generalization
+   - No real-time processing pipeline
+
+3. HIGHEST IMPACT IMPROVEMENTS:
+   a) Multi-temporal analysis → Early stress detection
+   b) Weather integration → Stress cause explanation
+   c) Field validation → Production-ready confidence
+
+4. RECOMMENDED NEXT ACTIONS:
+   - Priority 1: Integrate 5+ time steps of imagery
+   - Priority 2: Add weather API data
+   - Priority 3: Implement SHAP for farmer explanations
+   - Priority 4: Expand to multiple fields for validation
+
+CONCLUSION:
+===========
+This project demonstrates the potential of AI for crop health monitoring.
+However, production deployment requires addressing temporal, spatial, and
+validation gaps. The proposed improvements can potentially increase 
+accuracy from {roc_auc:.4f} to >0.95 while providing explainable, 
+actionable recommendations to farmers.
+
+The key to success is not just model accuracy, but:
+- TIMELINESS: Detecting stress before yield loss
+- EXPLAINABILITY: Telling farmers WHY and WHAT to do
+- TRUST: Validated predictions that farmers can rely on
+"""
+
+with open(os.path.join(OUTPUT_DIR, 'reflection_comprehensive.txt'), 'w', encoding='utf-8') as f:
+    f.write(reflection_comprehensive)
+
+print(f"\n✅ Comprehensive reflection saved to {OUTPUT_DIR}/reflection_comprehensive.txt")
+
+# Also save improvement metrics to CSV for tracking
+improvement_metrics.to_csv(os.path.join(OUTPUT_DIR, 'improvement_metrics.csv'), index=False)
+print(f"✅ Improvement metrics saved to {OUTPUT_DIR}/improvement_metrics.csv")
 
 
 # ==============================================================================
@@ -1027,13 +1659,13 @@ print(f"✅ Reflection saved to {OUTPUT_DIR}/reflection.txt")
 # ==============================================================================
 
 print("\n" + "=" * 60)
-print("💾 SAVING FINAL OUTPUTS")
+print(" SAVING FINAL OUTPUTS")
 print("=" * 60)
 
 # Save predictions to CSV
 output_path = os.path.join(OUTPUT_DIR, 'predictions.csv')
 df.to_csv(output_path, index=False)
-print(f"✅ Predictions saved to {output_path}")
+print(f" Predictions saved to {output_path}")
 
 # Create confusion matrix heatmap
 plt.figure(figsize=(8, 6))
@@ -1051,11 +1683,335 @@ plt.ylabel('Actual')
 plt.tight_layout()
 plt.savefig(os.path.join(OUTPUT_DIR, 'confusion_matrix.png'), dpi=150)
 plt.close()
-print(f"✅ Confusion matrix saved to {OUTPUT_DIR}/confusion_matrix.png")
+print(f" Confusion matrix saved to {OUTPUT_DIR}/confusion_matrix.png")
 
 
 # ==============================================================================
-# SECTION 15: FINAL SUMMARY
+# SECTION 16: NEXT STEP 1 & 2 - PRIORITY DRONE INSPECTION LIST
+# ==============================================================================
+# 
+# 📘 WHAT IS THIS?
+# Automates Steps 1 & 2 of NEXT STEPS:
+# - Identifies areas that need immediate drone inspection
+# - Creates prioritized list sorted by stress probability
+#
+# ==============================================================================
+
+print("\n" + "=" * 60)
+print(" NEXT STEP IMPLEMENTATION: PRIORITY DRONE INSPECTION LIST")
+print("=" * 60)
+
+# ------------------------------------------------------------------------------
+# 2.1 WHAT: Filter high-priority areas for drone inspection
+# 2.2 WHY: Critical and High stress areas need immediate attention
+#          Saves time by focusing drone flights on problem areas
+# 2.3 WHEN: After stress categorization
+# 2.4 WHERE: Operational planning phase
+# 2.5 HOW: Filter DataFrame by stress category
+# 2.6 INTERNAL: Boolean indexing on DataFrame
+# 2.7 OUTPUT: DataFrame with only priority areas
+# ------------------------------------------------------------------------------
+
+# Get Critical and High stress areas
+critical_areas = df[df['stress_category'] == 'Critical'][
+    ['grid_x', 'grid_y', 'stress_probability', 'ndvi_mean', 'moisture_index', 'stress_category']
+].copy()
+high_stress_areas = df[df['stress_category'] == 'High'][
+    ['grid_x', 'grid_y', 'stress_probability', 'ndvi_mean', 'moisture_index', 'stress_category']
+].copy()
+
+# Combine and sort by stress probability (highest first)
+priority_inspection = pd.concat([critical_areas, high_stress_areas])
+priority_inspection = priority_inspection.sort_values('stress_probability', ascending=False)
+
+# Add priority ranking
+priority_inspection['priority_rank'] = range(1, len(priority_inspection) + 1)
+
+print(f"\n Priority Inspection Summary:")
+print(f"    Critical areas: {len(critical_areas)}")
+print(f"    High stress areas: {len(high_stress_areas)}")
+print(f"    Total priority locations: {len(priority_inspection)}")
+
+if len(priority_inspection) > 0:
+    print(f"\n TOP 10 PRIORITY INSPECTION LOCATIONS:")
+    print("-" * 60)
+    print(priority_inspection.head(10).to_string(index=False))
+    
+    # Save priority inspection list to CSV
+    priority_csv_path = os.path.join(OUTPUT_DIR, 'priority_inspection_list.csv')
+    priority_inspection.to_csv(priority_csv_path, index=False)
+    print(f"\n Priority inspection list saved to {priority_csv_path}")
+else:
+    print("\n No high-priority areas found! Field is in good health.")
+
+
+# ==============================================================================
+# SECTION 17: NEXT STEP 3 - FIELD VALIDATION SAMPLING PLAN
+# ==============================================================================
+# 
+# 📘 WHAT IS THIS?
+# Creates a sampling plan for ground truth validation:
+# - Stratified random sample from each stress category
+# - Field team can visit these locations to verify predictions
+# - Helps measure model accuracy in real-world conditions
+#
+# ==============================================================================
+
+print("\n" + "=" * 60)
+print("📋 NEXT STEP IMPLEMENTATION: FIELD VALIDATION SAMPLING PLAN")
+print("=" * 60)
+
+# ------------------------------------------------------------------------------
+# 2.1 WHAT: Create stratified sample for field validation
+# 2.2 WHY: Need ground truth data to validate model predictions
+#          Stratified sampling ensures all categories are represented
+# 2.3 WHEN: Before field deployment
+# 2.4 WHERE: Model validation phase
+# 2.5 HOW: Sample fixed percentage from each stress category
+# 2.6 INTERNAL: Group by category, sample from each group
+# 2.7 OUTPUT: DataFrame with sample points for field validation
+#
+# 3.1-3.7 ARGUMENT: n (sample size per category)
+# 3.1 WHAT: Number of samples to select
+# 3.2 WHY: Balance between coverage and field work effort
+# 3.3 WHEN: Sampling
+# 3.4 WHERE: sample() method argument
+# 3.5 HOW: Integer, typically 10-20 per category
+# 3.6 INTERNAL: Random selection without replacement
+# 3.7 OUTPUT: Specified number of samples
+# ------------------------------------------------------------------------------
+
+validation_samples = pd.DataFrame()
+
+print("\n🎯 Stratified Sampling Plan (10 samples per category or max available):\n")
+
+for category in df['stress_category'].unique():
+    category_data = df[df['stress_category'] == category].copy()
+    
+    # Sample 10 points or maximum available (whichever is smaller)
+    sample_size = min(10, len(category_data))
+    
+    if sample_size > 0:
+        sampled = category_data.sample(n=sample_size, random_state=42)
+        sampled['validation_purpose'] = 'Ground truth verification'
+        validation_samples = pd.concat([validation_samples, sampled])
+        print(f"   {category}: {sample_size} samples selected (from {len(category_data)} total)")
+
+# Select relevant columns for field team
+validation_columns = ['grid_x', 'grid_y', 'stress_category', 'stress_probability', 
+                      'ndvi_mean', 'moisture_index', 'predicted_label', 'validation_purpose']
+validation_export = validation_samples[validation_columns].copy()
+
+# Add field validation columns (to be filled by field team)
+validation_export['actual_health_status'] = ''  # Field team fills this
+validation_export['notes'] = ''                  # Field observations
+validation_export['photo_id'] = ''               # Reference to field photos
+
+print(f"\n📍 Total validation samples: {len(validation_export)}")
+
+# Save validation sampling plan
+validation_csv_path = os.path.join(OUTPUT_DIR, 'field_validation_samples.csv')
+validation_export.to_csv(validation_csv_path, index=False)
+print(f" Field validation samples saved to {validation_csv_path}")
+
+# Create field validation instructions
+validation_instructions = """
+FIELD VALIDATION GUIDE
+======================
+
+PURPOSE:
+This file contains sample locations for ground truth validation.
+Visit each location and record the actual crop health status.
+
+INSTRUCTIONS FOR FIELD TEAM:
+1. Use GPS to navigate to each (grid_x, grid_y) location
+2. Visually assess the crop health
+3. Fill in the 'actual_health_status' column:
+   - 'Healthy' if plants appear vigorous and green
+   - 'Stressed' if plants show wilting, discoloration, or disease
+
+4. Add notes about what you observe (pest damage, water stress, etc.)
+5. Take photos and record the photo ID
+
+VALIDATION METRICS:
+After completing field work, compare:
+- Model's 'predicted_label' vs your 'actual_health_status'
+- Calculate: Accuracy = (matching predictions / total samples) × 100
+"""
+
+validation_guide_path = os.path.join(OUTPUT_DIR, 'field_validation_guide.txt')
+with open(validation_guide_path, 'w', encoding='utf-8') as f:
+    f.write(validation_instructions)
+print(f" Field validation guide saved to {validation_guide_path}")
+
+
+# ==============================================================================
+# SECTION 18: NEXT STEP 4 - INTERVENTION STRATEGY PLANNING
+# ==============================================================================
+# 
+# 📘 WHAT IS THIS?
+# Generates specific intervention recommendations based on:
+# - Stress probability level
+# - Vegetation index values (NDVI, moisture, etc.)
+# - Creates actionable plan for farm managers
+#
+# ==============================================================================
+
+print("\n" + "=" * 60)
+print(" NEXT STEP IMPLEMENTATION: INTERVENTION STRATEGY PLANNING")
+print("=" * 60)
+
+# ------------------------------------------------------------------------------
+# 2.1 WHAT: Function to suggest intervention based on feature values
+# 2.2 WHY: Different stress causes need different solutions
+#          Low moisture → irrigation, Low NDVI → fertilizer, etc.
+# 2.3 WHEN: For each stressed area
+# 2.4 WHERE: Intervention planning
+# 2.5 HOW: if-elif logic based on thresholds
+# 2.6 INTERNAL: Compares values against agronomic thresholds
+# 2.7 OUTPUT: String with recommended action
+# ------------------------------------------------------------------------------
+
+def suggest_intervention(row):
+    """
+    Suggest intervention strategy based on vegetation indices.
+    
+    3.1 WHAT: Analyzes row data to recommend action
+    3.2 WHY: Automates intervention planning
+    3.3 WHEN: Called for each stressed area
+    3.4 WHERE: apply() on DataFrame
+    3.5 HOW: Pass row, returns recommendation string
+    3.6 INTERNAL: Threshold-based decision logic
+    3.7 OUTPUT: Intervention recommendation
+    
+    Parameters:
+    -----------
+    row : pd.Series
+        3.1 WHAT: Single row from DataFrame
+        3.2 WHY: Contains all feature values for one location
+        3.3 WHEN: During apply()
+        3.4 WHERE: Function argument
+        3.5 HOW: Passed automatically by apply()
+        3.6 INTERNAL: Access columns via row['column_name']
+        3.7 OUTPUT: Used to determine recommendation
+    """
+    recommendations = []
+    
+    # Check moisture stress
+    if row['moisture_index'] < 0.3:
+        recommendations.append(' Irrigation needed - Low moisture detected')
+    
+    # Check NDVI (vegetation health)
+    if row['ndvi_mean'] < 0.4:
+        recommendations.append(' Fertilizer application - Low vegetation vigor')
+    
+    # Check canopy density
+    if 'canopy_density' in row and row['canopy_density'] < 0.5:
+        recommendations.append(' Check for pest/disease - Thin canopy detected')
+    
+    # If still stressed but no specific issue found
+    if len(recommendations) == 0 and row['stress_probability'] > 0.5:
+        recommendations.append(' Detailed inspection needed - Cause unclear from indices')
+    
+    return ' | '.join(recommendations) if recommendations else ' Monitor only'
+
+
+# Apply intervention suggestions to stressed areas
+stressed_areas = df[df['predicted_label'] == 'Stressed'].copy()
+
+if len(stressed_areas) > 0:
+    stressed_areas['recommended_intervention'] = stressed_areas.apply(suggest_intervention, axis=1)
+    
+    # Create intervention summary
+    intervention_summary = stressed_areas.groupby('stress_category').agg({
+        'grid_x': 'count',
+        'stress_probability': 'mean',
+        'ndvi_mean': 'mean',
+        'moisture_index': 'mean'
+    }).rename(columns={'grid_x': 'area_count'})
+    
+    print("\n INTERVENTION SUMMARY BY STRESS CATEGORY:")
+    print("-" * 60)
+    print(intervention_summary.to_string())
+    
+    # Count intervention types
+    print("\n RECOMMENDED INTERVENTIONS:")
+    print("-" * 60)
+    
+    irrigation_needed = stressed_areas['recommended_intervention'].str.contains('Irrigation').sum()
+    fertilizer_needed = stressed_areas['recommended_intervention'].str.contains('Fertilizer').sum()
+    inspection_needed = stressed_areas['recommended_intervention'].str.contains('pest|inspection', case=False).sum()
+    
+    print(f"    Areas needing irrigation: {irrigation_needed}")
+    print(f"    Areas needing fertilizer: {fertilizer_needed}")
+    print(f"    Areas needing detailed inspection: {inspection_needed}")
+    
+    # Save intervention plan
+    intervention_columns = ['grid_x', 'grid_y', 'stress_category', 'stress_probability',
+                           'ndvi_mean', 'moisture_index', 'recommended_intervention']
+    intervention_plan = stressed_areas[intervention_columns].sort_values(
+        'stress_probability', ascending=False
+    )
+    
+    intervention_csv_path = os.path.join(OUTPUT_DIR, 'intervention_plan.csv')
+    intervention_plan.to_csv(intervention_csv_path, index=False)
+    print(f"\n Intervention plan saved to {intervention_csv_path}")
+    
+    # Show top 10 intervention actions
+    print("\n TOP 10 PRIORITY INTERVENTIONS:")
+    print("-" * 60)
+    print(intervention_plan[['grid_x', 'grid_y', 'stress_category', 'recommended_intervention']].head(10).to_string(index=False))
+
+else:
+    print("\n No stressed areas found! No interventions needed.")
+
+
+# ==============================================================================
+# SECTION 19: NEXT STEPS SUMMARY REPORT
+# ==============================================================================
+
+print("\n" + "=" * 60)
+print("📋 NEXT STEPS IMPLEMENTATION COMPLETE!")
+print("=" * 60)
+
+next_steps_report = f"""
+🎯 NEXT STEPS IMPLEMENTATION REPORT
+{'=' * 50}
+
+✅ STEP 1 & 2: DRONE INSPECTION PRIORITIZATION
+   - Priority inspection list generated
+   - {len(priority_inspection) if len(priority_inspection) > 0 else 0} locations flagged for immediate drone survey
+   - File: priority_inspection_list.csv
+
+✅ STEP 3: FIELD VALIDATION SAMPLING
+   - Stratified sample created for ground truth validation
+   - {len(validation_export)} sample locations selected
+   - Field guide included for validation team
+   - Files: field_validation_samples.csv, field_validation_guide.txt
+
+✅ STEP 4: INTERVENTION STRATEGY
+   - Automated recommendations based on vegetation indices
+   - {len(stressed_areas) if len(stressed_areas) > 0 else 0} stressed areas analyzed
+   - Specific actions assigned (irrigation, fertilizer, inspection)
+   - File: intervention_plan.csv
+
+📁 NEW OUTPUT FILES:
+   7. priority_inspection_list.csv
+   8. field_validation_samples.csv
+   9. field_validation_guide.txt
+   10. intervention_plan.csv
+"""
+
+print(next_steps_report)
+
+# Save next steps report
+with open(os.path.join(OUTPUT_DIR, 'next_steps_report.txt'), 'w', encoding='utf-8') as f:
+    f.write(next_steps_report)
+print(f"✅ Next steps report saved to {OUTPUT_DIR}/next_steps_report.txt")
+
+
+# ==============================================================================
+# SECTION 20: FINAL SUMMARY
 # ==============================================================================
 
 print("\n" + "=" * 60)
@@ -1070,6 +2026,11 @@ print(f"""
    4. {OUTPUT_DIR}/drone_recommendations.txt
    5. {OUTPUT_DIR}/reflection.txt
    6. {OUTPUT_DIR}/predictions.csv
+   7. {OUTPUT_DIR}/priority_inspection_list.csv
+   8. {OUTPUT_DIR}/field_validation_samples.csv
+   9. {OUTPUT_DIR}/field_validation_guide.txt
+   10. {OUTPUT_DIR}/intervention_plan.csv
+   11. {OUTPUT_DIR}/next_steps_report.txt
 
 📊 MODEL PERFORMANCE:
    - ROC-AUC Score: {roc_auc:.4f}
@@ -1078,11 +2039,10 @@ print(f"""
    - 🟢 Healthy: {healthy_count} areas ({healthy_count/total_count*100:.1f}%)
    - 🔴 Stressed: {stress_count} areas ({stress_count/total_count*100:.1f}%)
 
-🎯 NEXT STEPS:
-   1. Review the stress heatmap
-   2. Prioritize drone inspections based on recommendations
-   3. Collect ground truth data for validation
-   4. Plan intervention strategies for stressed areas
+🎯 NEXT STEPS IMPLEMENTED:
+   ✅ Step 1 & 2: Priority drone inspection list created
+   ✅ Step 3: Field validation samples exported
+   ✅ Step 4: Intervention strategies planned
 """)
 
 print("=" * 60)

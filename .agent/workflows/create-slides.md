@@ -41,7 +41,7 @@ This workflow generates the **NotebookLM-style** slide deck.
 - **USE** Python libraries: **FPDF2** or **ReportLab**
 
 ### Recommended Approach (FPDF2)
-**Tooling:** Use Python script with UV: `uv run python generate_slides_pdf.py`
+**Tooling:** Use Python script with UV: `uv run generate_slides_pdf.py`
 
 ```python
 # Example PDF generation script template

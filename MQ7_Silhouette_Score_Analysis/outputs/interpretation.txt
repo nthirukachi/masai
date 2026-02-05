@@ -1,0 +1,16 @@
+
+START INTERPRETATION
+--------------------
+Based on the analysis, the optimal number of clusters is likely **K=2** with a Silhouette Score of **0.360**.
+
+1. **Inertia vs. Silhouette:** 
+   - Inertia decreases as we add more clusters (which is expected).
+   - However, the Silhouette Score peaks at K=2, indicating that at this point, the clusters are the most distinct and well-separated.
+
+2. **Marketing Stakeholder Note:**
+   - We have identified 2 distinct customer segments.
+   - These groups likely represent behaviors such as "High Spenders," "Budget Conscious," etc.
+   - We should tailor marketing strategies for each of these 2 groups specifically.
+
+3. **Visual Confirmation:**
+   - Please check 'silhouette_plot_k2.png'. You will see that the cluster "knives" (the shapes) are roughly equal in thickness and extend past the average line, which is a sign of good clustering.

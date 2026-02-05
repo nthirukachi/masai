@@ -1,0 +1,32 @@
+
+================================================================================
+[JUSTIFICATION] FOR CHOOSING k=3
+================================================================================
+
+After evaluating K-Means with k from 2 to 6, we select k=3 as the 
+optimal number of clusters. Here's why:
+
+**COHESION (Inertia Analysis)**:
+The elbow plot shows a clear bend at k=3. Inertia drops significantly 
+from k=2 to k=3 (steep decline), then decreases more gradually 
+(diminishing returns). This "elbow" indicates that k=3 provides 
+good cluster tightness without overfitting.
+
+**SEPARATION (Silhouette Analysis)**:
+The silhouette score at k=3 is 0.4799, indicating good 
+cluster separation. While k=2 achieves slightly higher silhouette (0.5818), 
+it merges naturally distinct groups.
+
+**DOMAIN INTUITION**:
+The Iris dataset contains 3 actual flower species (Setosa, Versicolor, 
+Virginica). Our analysis correctly identifies k=3, matching 
+biological reality!
+
+**BALANCE**:
+k=3 optimally balances:
+- Cohesion: Compact clusters (inertia=191.02)
+- Separation: Well-distinguished groups (silhouette=0.4799)
+- Interpretability: Matches known species count
+
+Word count: ~180 words
+================================================================================

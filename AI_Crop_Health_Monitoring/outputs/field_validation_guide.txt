@@ -1,0 +1,22 @@
+
+FIELD VALIDATION GUIDE
+======================
+
+PURPOSE:
+This file contains sample locations for ground truth validation.
+Visit each location and record the actual crop health status.
+
+INSTRUCTIONS FOR FIELD TEAM:
+1. Use GPS to navigate to each (grid_x, grid_y) location
+2. Visually assess the crop health
+3. Fill in the 'actual_health_status' column:
+   - 'Healthy' if plants appear vigorous and green
+   - 'Stressed' if plants show wilting, discoloration, or disease
+
+4. Add notes about what you observe (pest damage, water stress, etc.)
+5. Take photos and record the photo ID
+
+VALIDATION METRICS:
+After completing field work, compare:
+- Model's 'predicted_label' vs your 'actual_health_status'
+- Calculate: Accuracy = (matching predictions / total samples) × 100

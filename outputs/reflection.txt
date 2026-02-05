@@ -1,0 +1,49 @@
+PROJECT REFLECTION AND LIMITATIONS
+==================================================
+
+LIMITATIONS OF THIS APPROACH:
+-----------------------------
+1. 📊 Dataset Size:
+   - Small dataset may not capture all stress patterns
+   - More data would improve model generalization
+
+2. 🕐 Temporal Aspects:
+   - Single time snapshot - no seasonal variation
+   - Stress changes over time not captured
+
+3. 🌍 Geographic Specificity:
+   - Model trained on one field/region
+   - May not transfer to different climates or crops
+
+4. 🔬 Ground Truth:
+   - Labels may have some uncertainty
+   - Field validation not included
+
+5. 🌱 Crop Type:
+   - Single crop type assumed
+   - Different crops have different index thresholds
+
+PROPOSED IMPROVEMENTS:
+----------------------
+1. 📈 More Data:
+   - Collect data across multiple seasons
+   - Include multiple fields and crop types
+
+2. 🛰️ Multi-temporal Analysis:
+   - Track changes over time
+   - Detect stress progression
+
+3. 🔍 Additional Features:
+   - Weather data integration
+   - Soil sensor data
+   - Historical yield data
+
+4. 🤖 Advanced Models:
+   - Try XGBoost, LightGBM for comparison
+   - Deep learning for texture features
+   - Ensemble methods for robustness
+
+5. ✅ Validation:
+   - Field verification of predictions
+   - Agronomist expert review
+   - A/B testing of recommendations

@@ -76,11 +76,17 @@ cd c:\masai\<project_name>
 # Initialize UV in project (if not exists)
 uv init
 
+# To Create virtual environment(if not exists)
+uv venv
+
+# To activate virtual environment
+.venv\Scripts\activate
+
 # Install dependencies (example)
-uv add numpy pandas matplotlib scikit-learn
+uv add -r requirements.txt
 
 # Run Python scripts
-uv run python src/<project_name>.py
+uv run src/<project_name>.py
 ```
 
 ### 4. README Generation

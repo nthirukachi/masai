@@ -1,0 +1,36 @@
+DRONE INSPECTION STRATEGY
+==================================================
+
+STRESS CATEGORY DISTRIBUTION:
+stress_category
+Low (Healthy)    735
+Critical         361
+High              57
+Medium            47
+
+
+Based on the stress analysis, here are the recommended drone actions:
+
+🔴 CRITICAL STRESS AREAS (Probability > 75%):
+   - Immediate detailed inspection required
+   - Collect close-up imagery for diagnosis
+   - Priority: HIGH - inspect within 24 hours
+   - Action: Low-altitude multispectral + RGB capture
+
+🟠 HIGH STRESS AREAS (Probability 50-75%):
+   - Schedule inspection within 3 days
+   - Monitor for progression
+   - Priority: MEDIUM-HIGH
+   - Action: Standard multispectral survey
+
+🟡 MEDIUM STRESS AREAS (Probability 25-50%):
+   - Include in routine weekly surveys
+   - Mark for continued monitoring
+   - Priority: MEDIUM
+   - Action: Regular monitoring flight
+
+🟢 LOW STRESS / HEALTHY AREAS (Probability < 25%):
+   - Standard bi-weekly monitoring
+   - No immediate action needed
+   - Priority: LOW
+   - Action: Routine surveillance only
