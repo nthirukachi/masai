@@ -1,0 +1,117 @@
+Overview of Decision Trees and Random Forests
+
+The lecture focused on Decision Trees and Random Forests as supervised learning algorithms useful for classification and regression tasks. It covered the basic concepts, mathematical criteria for splitting nodes in decision trees (Entropy, Information Gain, Gini Index), pruning techniques, and ensemble methods like Random Forests including practical code demonstrations.
+Decision Trees
+
+    Structure & Function: Decision Trees have a root node, internal nodes representing feature tests, branches representing test outcomes, and leaf nodes producing final decisions (class labels or regression values). It is similar to a flow chart with if-else conditions.
+    Goal of Splitting: The goal at each split is to create the purest possible subsets, ideally separating classes completely on each side of the split.
+    Feature Selection: Features with the most influence on the target variable (like 'fare' or 'gender' in the Titanic example) tend to form the top levels of the tree.
+    Pure Subsets: Subsets where all data points belong to one class after a decision boundary are called pure subsets.
+    Stopping Criteria:
+        When all samples in a node belong to one class.
+        Limiting maximum tree depth to prevent overfitting and reduce complexity.
+        Minimum number of samples required to split a node to avoid decision-making on very few samples.
+
+Metrics for Decision Tree Splitting
+
+    Entropy and Information Gain:
+        Entropy measures the impurity or randomness in data.
+        Information Gain quantifies the reduction in entropy via splitting.
+        Splits maximizing Information Gain are preferred.
+    Gini Index:
+        A simpler purity metric without logarithmic calculations.
+        Measures impurity; a lower Gini Index indicates purer splits.
+        Splits with the highest reduction in Gini Index are favored.
+    Comparison:
+        Both metrics aim to find splits creating the purest subsets.
+        Information Gain uses entropy and logarithmic terms, taking more time to compute.
+        Gini Index is faster and widely used in practice, such as in the CART algorithm.
+
+Pruning Methods
+
+    Purpose: Reduce overfitting and improve inference speed by limiting tree complexity.
+    Pre-Pruning: Set limits before training, such as maximum depth or minimum samples per split.
+    Post-Pruning: Grow full tree first and then remove branches that do not provide meaningful information.
+    Benefits: Improved generalization, faster predictions, less memory/storage needed.
+
+Random Forests
+
+    Concept: An ensemble of multiple decision trees trained on different subsets of the data (bagging).
+    Majority Voting: Each tree votes on the classification, and the majority vote determines the final prediction.
+    Advantages:
+        Reduces overfitting by averaging multiple trees.
+        Handles missing data and large feature spaces well.
+        Provides feature importance scores indicating which features are influential.
+    Training:
+        Trees trained on random subsets of data and features.
+        Trees are independent and can be trained in parallel.
+    Trade-offs:
+        More accurate and robust than single trees.
+        Less interpretable than individual trees due to model complexity.
+        Takes more computational resources.
+
+Coding Demonstrations
+
+    Decision Tree Classifier:
+        Trained on a synthetic dataset.
+        Visualized tree structure with feature thresholds and class distributions.
+        Showed that pruning reduces accuracy but improves interpretability and speed.
+    Random Forest Classifier:
+        Example on Titanic dataset with cleaning and encoding categorical data.
+        Used 100 trees (estimators).
+        Accuracy around 76%.
+        Extracted feature importance where features like age and fare were most influential.
+    Random Forest Regressor:
+        House price prediction example using regression forest.
+        Evaluated with mean squared error and R² score.
+        Noted problem of increasing error with higher target values (heteroscedasticity).
+
+Key Takeaways
+
+    Decision trees are intuitive and interpretable but prone to overfitting if not controlled.
+    Metrics like information gain and Gini index guide optimal splitting in trees.
+    Pruning techniques help balance complexity and performance.
+    Random forests improve robustness and accuracy through ensemble learning.
+    Both techniques handle classification and regression problems.
+    Libraries in Python (scikit-learn) allow easy implementation and visualization with minimal code.
+
+
+
+Important Concepts List
+
+    Structure of Decision Trees
+        Root node, internal nodes (feature tests), branches, leaf nodes (final decisions)
+
+    Goal of Splitting in Decision Trees
+        Creating pure subsets (all samples belong to one class)
+
+    Feature Selection
+        Choosing features that best separate the classes at each split
+
+    Metrics for Splitting
+        Entropy and Information Gain
+        Gini Index
+        Comparison between Entropy and Gini
+
+    Stopping Criteria
+        When to stop splitting nodes (pure nodes, max depth, min samples per split)
+
+    Pruning Methods
+        Pre-pruning (limits before training)
+        Post-pruning (removing branches after training)
+
+    Random Forests
+        Ensemble of decision trees with bagging (random subsets)
+        Majority voting for classification
+        Feature importance from the ensemble
+
+    Advantages and Trade-offs
+        Overfitting reduction using pruning and ensembles
+        Interpretability vs. accuracy trade-offs
+
+    Applications to Classification and Regression
+        Using decision trees and random forests for both tasks
+
+    Practical Implementation
+        Use of scikit-learn library for modeling and visualization
+        Understanding output like feature importance and accuracy scores

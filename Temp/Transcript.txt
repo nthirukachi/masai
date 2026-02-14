@@ -1,0 +1,1086 @@
+So today's session is about decision freeze in random forest.
+0:54 So we have already gone through it once we started this classification.
+1:00 exercise. So initially we spoke about different types of classifier and there we discussed
+1:09 about DC-tree as well. But today we'll try to go in more details, especially try to
+1:15 see the code of random tree, how we can use random tree in different scenarios. So complete
+1:23 session is dedicated for random tree, sorry, dis-entries and rainforest.
+1:30 So I hope you have some memories of what we discussed when we were talking about random
+1:39 trees, random forest and the same trees.
+1:43 So I'll try to just revise those things today and try to give you some more information.
+1:47 Mostly we discussed important details, but today will go in more details and try to give you
+1:54 some examples and some coding exercises out it so that you get some
+2:00 idea about it. Okay. So let's start the session. So DC-tree is a supervised learning
+2:10 algorithm. The good thing about DC-entry is that it can be used for classification also and
+2:16 it can be used for regression also. So if you want to break classes, then also recentry is
+2:24 useful and if you want to break some numbers in continuous scale, still you can
+2:30 go for decision tree. So we have already seen the structure of decision tree. There is a root
+2:37 node, there are branches, and then there is an internal node, there are some internal nodes, and finally
+2:43 there are some leave nodes. So leave notes are the one that do the final decision or the
+2:50 prediction. If you are doing prediction, if you're doing classification, then the leave notes will
+2:53 do the classification for you. If you are doing some recreation, then leave notes will give you the
+2:58 the value. So this is how this increase is structured. So it is kind of a flow chart for
+3:08 decisions. So all of you might have some idea about flow charts. So in flow charts, what we do,
+3:15 we start with a point and then we keep on doing, keep on taking decisions while we go from one
+3:23 one decision point to the other decision.
+3:28 point. So we keep on taking the decision and finally we stop at some point.
+3:32 So there's a starting point, there's an end point in the flow chart. So a similar structure
+3:37 is there in the decision tree also. But flow chart can have any structure, but decision
+3:41 tree will have a tree structure. So those who are studying computer science or have studied
+3:46 computer science, they might have some idea like how a tree looks like. There's a root node
+3:53 and then there are branches and then finally you'll have some leave notes. So,
+3:58 So you can also look decision free as multiple if else conditions.
+4:08 You start with if else condition at the top.
+4:11 If this condition is following, then go on the left side.
+4:14 If this condition is following, go on the right side.
+4:17 And then finally you keep on taking these decisions and finally you reach at the leaf node.
+4:23 So this is how decision tree is structured.
+4:28 So on this slide, I just want to tell you that each internal node is a feature test.
+4:39 And each branch is the outcome of that test.
+4:44 So on every branch, on every node where you are doing some branch, you are trying to test some
+4:51 condition.
+4:52 So these conditions will be tested against the features.
+4:55 So you have to see that a feature
+4:58 If a particular feature is having value of say less than 30, then go on left side.
+5:04 If it is having greater than 30, then go on right side.
+5:07 So all these tests are happening based on the features.
+5:11 And each leaf, leaf is the last layer where there is no branches after that.
+5:20 So that is called leaf.
+5:22 And leaf will tell you the label of the class if you are doing classification or if you are doing
+5:26 the regression then it will tell you a numerical value that is the prediction of the model.
+5:33 So what is the ultimate goal when you try to divide into different classes?
+5:45 So initially, suppose you have a data set, so initially you start with the complete data set.
+5:51 And then you take some decision at the route, which means some samples will go on the left
+5:56 some samples will go on the right side, which means you are trying to create subsets,
+6:01 subsets of the data set, training data set.
+6:04 So, and now the question is how the algorithm should create the subsets?
+6:10 What should be the goal? Can you tell me what should be the goal?
+6:14 Since we have discussed this before, so I can expect that you tell me what should be the goal when we are tried to divide subsets.
+6:25 subsets.
+6:26 Yeah, on the chat?
+6:27 Yeah, on the chat.
+6:34 Screen and test.
+6:57 Please tell me what should be the goal of dividing subsets at every branch of the tree.
+7:04 It reduces time of the tree.
+7:05 It reduces time complexity and easy solving, increase.
+7:24 More than accuracy, more important features based on category and variations.
+7:26 category and variations there should be yes or no separating yeah so I like this
+7:33 term separating so whenever you try to divide classes whenever you try to divide subsets at any point
+7:41 in the decision tree your ultimate goal should be separation you should be able to separate
+7:46 like all all people who are saying yes to a particular question should go on the left side
+7:53 all people who are saying no they should go on the right side so if we can create
+8:00 a proper separation then we are done because ultimately what will happen is that suppose all
+8:06 those who have said yes if they are on the same side then whenever i want to inference i mean whenever
+8:13 the training is complete i will go i will choose that branch and i will just say yes i will go in that
+8:20 branch so which means i
+8:23 our ultimate goal is to come up with the subsets where i'm having clear decisions on either
+8:32 side all the yes maybe on the left side all the nose maybe on the right side but can i come up
+8:40 with these kind of decisions every time is it possible that i can clearly
+8:46 bifurcate the data in two parts
+8:53 i mean it is it is tough it is tough so if if i can do that then it is it is great but uh in
+9:01 most of the scenarios i may not be able to do that so in that case i have to do some mathematical
+9:09 analysis i have to choose some maths to understand how should i divide this complete set
+9:16 into two small subsets and then again i have to take this column so this is where we have to
+9:23 where we have to study the information gain entropy and genie index so these three are
+9:30 these three measures will study today so one thing i just want you to note i think i also mentioned
+9:36 in the last session about decision free is that decision free will create these branches by
+9:44 its own so there is no human who creates this decision free so once you pass the data
+9:51 and whenever you will see today whenever you will just call that line in
+9:56 skilard about decision tree you pass that data so the model itself will create a
+10:03 decision tree based on its understanding of the data it will it will by itself
+10:09 create those classes it will it will it will create those branches by itself
+10:15 by itself and on which basis it will create the branches it will create the branches it will
+10:20 create the branches based on gd index entropy information gain the things that will
+10:26 study today okay so we've got some idea of this entry all of you okay okay
+10:40 somebody is asking how to identify which feature is to be considered for creating
+10:44 this is a very important and relevant question so
+10:50 now you should should go back to an example that we've used multiple times the titanic
+10:57 example did you remember all of you the titanic example where you have some 15 or 17 features and then
+11:04 you will try to you are trying to predict whether that person whether that person who is
+11:09 boarding titanic will survive or not survive disaster or not so and then we when we were
+11:18 studying about plots you are studied we were studying about correlations between
+11:27 features we came up with a feature that was having the most impact on the survival
+11:34 of a person which was that that feature do you recall was it age of the passenger
+11:44 was it the passenger was it the class
+11:48 yes so pair was the feature i guess which means the people who have paid higher fare
+11:59 which means automatically they were traveling in higher class they had a very good survival
+12:06 rate the second feature that has a big impact was gender most of the females they survived
+12:18 And I think child was also one of the features that has a lot of influence on the output.
+12:24 So if you see, these three were the features that were having a lot of impact on the final output.
+12:30 So if you were to create a decision free that should tell you about whether that person is survived or not.
+12:40 So you will start with a complete data set initially and then you have all these 15 features in hand.
+12:46 But your decision free will try to take.
+12:48 decisions on those features which are more influential.
+12:53 So as you have correctly pointed out at fair and gender are the two features which are
+12:58 having a lot of impact on the final outcome. So it will try to create boundaries based on these
+13:04 features. It will also use some other features as well because other features will have some
+13:10 impact if not a huge impact but it will also have they will also have some impact.
+13:16 So ultimately what will happen is that a tree will be
+13:18 created, but mostly the tree will be generated based on these features.
+13:23 It will, I mean, the DCN boundaries will be generated based on these features because these features are the ones who were dictating the terms for you.
+13:31 Is this clear now a bit?
+13:37 Okay.
+13:42 So yeah.
+13:48 So this type of data set that we try to create at every decision boundary, this type of subset of the data set, is called pure subset.
+13:57 So the meaning of pure subset means, suppose I have a two class problem.
+14:02 So I have to just classify some images as dogs and some images as cat.
+14:08 So, and initially I have started with, say, 50 images.
+14:13 And I am saying that if nose of the image,
+14:18 of the object is smaller than a particular dimension, smaller at a particular length.
+14:25 Then I will say that it is a dog if nose is bigger, then I'll say it will be a cat.
+14:34 And this nose attribute, or this nose feature with a certain value, and nose is less than 5,
+14:41 length of nose is less than 5 cm or something. This feature is that feature with a certain value,
+14:48 is influencing the output. So I'm taking no less than 5 as a decision boundary here and
+14:55 all which are coming to the left side they are cats and all they are coming at the right
+15:02 side are the dogs. So I'll say that these two features these two subsets that I have
+15:07 generated because of this decision these are pure subsets. Pure subset means all cats
+15:14 are at one side all dogs are at the other side. So if I get all
+15:18 all of them belonging to the same class, then I will say that is a pure subset.
+15:25 Okay? So if I can create a pure subset, which means I have created a boundary which is giving
+15:32 me very nice kind of illustrations. So is this notion of pure subset clear to you?
+15:48 Okay, so. And when we are trying to compare different classifiers, I have also
+16:11 why we should use decision-free? Because it provides you a very good interpretability.
+16:18 So sometimes some classify you will use, you will not get idea why you are getting this classification
+16:26 result, why 80% is accuracy. So you'll think about it and you will not be able to debug it.
+16:32 But if you use decision-free, you will understand why you are getting this much accuracy,
+16:39 how the model has created a decision-free. So we'll see today when we'll go to the code
+16:44 that these libraries, they provide you an option.
+16:48 where you can visualize a decision tree as well. What kind of decisionry was made when the model was trained?
+16:54 So you can visualize the decision tree through these libraries.
+17:00 It provides, so a lot of, you don't have to do a lot of pre-processing for decision trees.
+17:07 Even if you set, even if you sent some data which is not completely pre-processed, still the decisionry can give you decent results.
+17:18 So how dysentery works? Select the best features to split the data.
+17:23 The definition of best is very subjective.
+17:26 Model may think that this feature is giving, one model may think that this feature is best,
+17:32 and if I take a value of say 20 for this feature, then I'll, then I can easily classify,
+17:40 then I can easily create pure sets, pure subsets.
+17:43 Some other model may think differently and it will choose some other
+17:48 feature and take some other value of that feature to make decisions.
+17:52 And then again, so once you take, one thing that you should note here is that initial decisions
+17:58 are really crucial because especially the ones that you take towards the route.
+18:03 So these decisions are really crucial because all other decisions that you take, all the subsequent
+18:07 decisions, it is dependent upon the initial decision that you have taken.
+18:11 So if your initial decision is bad, then you will, whatever you do, you won't be able to perform
+18:16 good in the case of decision tree.
+18:18 So initial decision has to be very good.
+18:21 I mean, last, lower layer decisions, if you take bad, then it's fine.
+18:26 But initial decision has to be really nice.
+18:31 So decently divide datasets based on the selected features,
+18:35 and then it recursively repeat on each subset,
+18:39 unless all records belong to one class.
+18:42 So you tell me one thing.
+18:43 If all records belong to one class are at one side,
+18:47 then two.
+18:48 do I have to create more branches after that?
+18:52 Do I have to take more yes-no calls?
+18:55 So why we are doing these yes-no questions?
+18:58 We are ultimate goal is to figure out how to distinguish the two classes.
+19:07 If I am having a two-class classification,
+19:10 then ultimately I want to come up with classification
+19:14 where all yeses are on one side and all noes are on the one side.
+19:17 nose are on the one side. If I can do that, then I have, I've got a clear boundary between
+19:22 yes and nose. So even in the case of logistic recreation, even in the case of other classifiers,
+19:29 you have seen that the ultimate goal is to come up with that boundary, where in the case of SVM
+19:35 also, what was the goal in the case of SVM? We were trying to create a clear boundary between
+19:43 two classes, points of two classes. We want to maximize
+19:47 the margin between the two boundaries. You want to maximize the decision boundary so that these points can be clearly distinguishable.
+19:55 So in all the classifiers, the goal is the same. You want to create boundaries which are clear boundaries.
+20:02 On the other side of the boundary, all the points they belong to the same category.
+20:09 On this side of the boundary, all the points should belong ideally to the same class or the category.
+20:15 So what I was trying to say here is if I get to a point where all the records belong to one class,
+20:25 I don't have to create any more design points on that side.
+20:29 Maybe other side I have to create.
+20:31 I'll stop there. This is one stopping criteria.
+20:35 The other stopping criteria could be a maximum depth or minimum sample reaches.
+20:41 So sometimes what happens is,
+20:44 happens is because you may have lot of features, so what happens is your decision free becomes really, the depth of decision free becomes huge.
+20:54 So depth becomes 500 or 1000. So what will happen if the depth of decision increases, what are the problems we can encounter?
+21:08 Can you think of some problems?
+21:13 Overfed, slower results, more computation time.
+21:20 Yes, so all of these are the issues you have correctly pointed out.
+21:26 The first result, the first issue is overfitting.
+21:30 Since you are taking decisions based on small, small, small features and those features
+21:37 which are not actually impacting the output is still you are just trying to correct small, small,
+21:43 stakes. So sometimes what happens is you are trying to just take the analogy of an exam.
+21:50 You try to mug up line by line. In that case what happens is if something comes out of the syllabus,
+21:58 you will be completely confused because you have mugged line by line.
+22:03 You don't know anything about anything beyond that. So if you are taking decisions, a lot of decisions,
+22:09 because since your decision tree is the depth is huge, which means,
+22:13 you have taken a lot of decisions.
+22:15 Lot of decision means you have seen different features and you have tried to mug up small, small details,
+22:23 which means you are trying to overfitting.
+22:26 Okay, that is one problem.
+22:28 The other problem would be more computation time.
+22:31 Because what actually happens is once you finish this training and you try to do an inference,
+22:36 then you will start from the root node and you have to take all the branches and then finally you have to reach to the
+22:42 the leaf node and then only you can make the decision.
+22:46 So at the time of inference it will take a lot of time because you have to
+22:49 traverse all these branches of the tree and then finally you will reach to the leaf node.
+22:54 So time will also be increased.
+22:57 And it will also lead to the slower results because you are wasting a lot of time in seeing all this if else
+23:05 you are trying to see all these branches and then finally will make the decisions.
+23:10 So this could be a lot of time.
+23:11 So this could be a problem. So what we can do, we can stop at some depth. So we can define the depth of the tree initially.
+23:21 So depth is 10. So which means the tree cannot be a depth of more than 10.
+23:29 So while creation of the tree, the model will make sure that the maximum depth of the tree is 10.
+23:35 So it will choose classes, it will choose decision points in such a fashion that it won't
+23:41 go beyond 10 the tree will have a depth of 10 whatever happens okay so the
+23:48 the libraries and algorithms they provide you knobs here where you can set the maximum depth of
+23:54 the tree another another point that can be taken into consideration for as a stop stopping
+24:02 criteria is the minimum samples reach so initially think of a criteria when
+24:08 initially you start with the decision tree
+24:11 you have all the samples say you have 500 training samples so you have all the samples
+24:16 based on those samples you have created two classes two subsets so say 300 samples are going in
+24:23 left direction and for 200 samples are going in the right direction so out of these 200 again
+24:29 you are dividing say 100 100 and then 50 60 50 40 for whatever classes ultimately you are taking
+24:37 you will be taking decisions based on two samples
+24:41 also three samples. So should we I mean give higher values or should we
+24:50 even consider making decisions on two samples or one sample? Does it actually make
+24:56 sense? Yes. Based on two samples should I make a decision? Should I create a
+25:06 branch? No. No. Again, if I'm going to make a decision, should I create a branch. Should I create a branch?
+25:11 we do that then we'll be overfitting.
+25:14 We are unnecessary increasing the depth of the tree and we are kind of overfitting.
+25:20 So the model will not be able to generalize if you just take decisions based on again,
+25:25 I'll take the same example.
+25:27 If you are mugging every line, every word of your textbook then you won't be able to generalize
+25:33 on a tough paper, tough example.
+25:38 So we can set up stopping criteria based on the maximum depth of the tree as well as
+25:46 as minimum samples.
+25:49 If I'm seeing only two samples, then I'll just stop.
+25:53 I won't take any further branches.
+25:54 I won't try to create new depth beyond that.
+26:01 So this is where I'll stop.
+26:04 So there are three criteria we have discussed.
+26:06 One is we'll stop if all the records belong to one class.
+26:08 are at one side then there is no point of again creating branches here because we have
+26:16 got all of them in one side so why to create more separations we got what we wanted
+26:23 second second stopping criteria is maximum depth i don't want to increase the depth of my tree
+26:29 beyond a certain point so i will stop at say maximum depth of five or ten whatever i want to
+26:34 set it and then memoriam samples reached so if
+26:38 I'm taking decisions on two samples three samples and I don't want to take such
+26:42 decisions because those some these decisions can these can be wrong decisions because
+26:48 these are giving you local information about those two samples they are not contributing
+26:55 towards a global picture so you can stop there and it will lead to overfitting also so you
+26:59 can stop there so understood the stopping criteria these three stopping
+27:04 criterions all of you
+27:08 okay good so let's take example suppose a customer wants to buy a product so whether a customer will
+27:25 purchase or not purchase these are the two classes and i have say two features the first feature
+27:33 is income and second feature is age so as i told you the
+27:38 that most influential features should be on the route so if you are having money if you are
+27:44 having huge income then you will buy anything okay so if you are having high income then you
+27:53 tend to buy things so i can set up a criterion at the route that if the income is greater than
+28:00 50,000 then i will take some other criteria if an income is less than 50,000 then i'm pretty sure
+28:07 that the person cannot buy this product so if the income is greater than 50 000
+28:12 per month or whatever you want to set then i will set one more criteria
+28:20 age is greater than 30 or not if age is also greater than 30 then i'll say that the person
+28:26 may not buy this thing because this product is not that relevant for that age group or whatever
+28:34 and then we can ask more questions one more criterion we can set is the previous purchases
+28:41 if the person has purchased something previously then it will purchase this item as well if the
+28:47 person has not purchased something then it will also not not purchase so we can create these
+28:51 criteria based on the features and we have to put the higher influential features at the route
+28:58 or near the route and as we go down we can see some other features which are not that influence
+29:04 but still having some contributions towards the final decision so that's how you should
+29:10 plan your decision tree and you don't have to plan the algorithm will create for you but you
+29:15 have to understand how the algorithm is creating that's the goal of this full exercise
+29:21 and that's where we'll study these two metrics first is uh information gain
+29:28 it measures the feature measures feature usefulness for the splits and
+29:34 genie index it measures the probability of incorrect classification and lower genie index is preferred
+29:41 so if you are having a lower genie index for a split you will choose that split so before going into the
+29:50 details are you very much clear why we want to study these metrics but what is the goal of studying this
+30:02 why we want genie index why we want information gain is this motivation clear to all of you
+30:10 if it is not clear then i can repeat okay yes i'll repeat no problem
+30:32 so yeah so what what happens is um you have some 10 features like the case of titanic
+30:41 example titanic example and you want to create a decision tree so the ultimate goal is that you want
+30:48 to predict whether the person is survived or not that is a goal okay so now you want to
+30:52 since you are taking decisions so you want to see which feature is uh let me let me take let me open the
+31:02 and give you an example that will be middle.
+31:32 Thank you.
+32:02 Thank you.
+32:32 Here my screen.
+32:47 Is it visible now?
+32:49 Is it visible now?
+32:53 Yes, sir.
+32:59 So what I was trying to say.
+33:01 is we, I was trying to motivate you to study information gain and and Genuindex with respect to
+33:15 Dizzy entries.
+33:17 So the point is why we want to study or why we want to discuss about them is because they tell you how to
+33:29 divide classes or which questions to be asked to be asked, which
+33:51 let's take one example of a titanic data set that we
+33:59 to. So as we discussed that age and gender, these two were and class. These three were the
+34:13 main influencing features. So we had some 15 features, I guess, but out of those features,
+34:23 these three were really influential. So and what is the ultimate goal?
+34:29 ultimate goal is to predict, correctly predict whether the person, predict whether person has survived or not.
+34:41 Okay, so this is the goal. So what we'll do, we'll have the model, once you pass the training data to the model, the model should create a decision tree for you.
+34:55 Now the question is how the model will create the decision tree.
+34:58 So it will start.
+34:59 start from the root node and then it will create some branches. So root node means, say you have some thousand training data samples.
+35:10 So all thousand samples will go at the root node.
+35:14 And then you have to ask one question at the root node that create two branches for you.
+35:20 So suppose I'm asking a question here, age is greater than 70.
+35:28 So if yes, then I'll go in this direction. If no, then I'm going in this direction.
+35:35 And then again, I will ask some questions here at this node.
+35:40 Say, I'll say, gender, gender.
+35:46 So if gender is male, then I'll go in this direction.
+35:52 Female, then I'll go in this direction.
+35:55 Similarly, I will go in this direction.
+35:57 Similarly, I will create.
+35:58 some other questions here and say maybe again I can ask the same question. I can ask gender, male, female, then again.
+36:09 Say for females, I'm asking the class, which class they are traveling.
+36:15 And then suppose they are traveling in the first class, they are traveling in the second class.
+36:22 So here I'm having. Suppose now
+36:27 I am getting, so also I'm getting some classes here like, say, 30 survived, and zero dead.
+36:57 survived, tended. I'm just trying to create an artificial example, just to give you idea.
+37:06 Suppose initially we had some thousand samples. So what is happening here? I'm asking a question here,
+37:18 age is greater than 70. Then in this case, I am getting, say, say,
+37:26 200 people who are having age critical 70 and 800 people who were having age less than 70.
+37:37 So now I have 800 samples to work with on this question, which is the gender question.
+37:42 Say, male, female. So I got, out of 800, I got, say, 100 samples, which were females, and 700 were males.
+37:54 So now out of this hundred, I'm again asking question, which class they traveled?
+37:59 If first class, then say 30 samples and say second class, there were some say 70 samples, make it 70 here.
+38:10 Out of these 30 samples who traveled, out of these 30 women who traveled in first class, 20 survived and 10 were dead.
+38:21 and out of this 70, 70 survived and zero died.
+38:26 Should I create one more branch here?
+38:29 That is the question I'm asking here.
+38:33 Should I create one more branch here?
+38:36 No, because I have got a pure class here.
+38:41 I have got a pure class. I have got my proper division.
+38:46 All the samples belongs to one class.
+38:50 They are in the same.
+38:51 one side and there is no other sample that belongs to the other class.
+38:54 So I have got a clear pure class.
+38:56 Pure class means all the samples belong to the same category.
+38:59 I don't have to make any decisions beyond this point.
+39:02 But beyond this point can I make decisions?
+39:05 I have to.
+39:08 Then I'll create, I'll ask some more questions here, okay?
+39:13 So now you tell me that are they traveling alone or not?
+39:20 or not so I mean, based on the features I have to ask questions.
+39:24 That is the important point here.
+39:26 And I have to resume some values of those features like
+39:29 what are the, yeah, so there can be more than two classes as well.
+39:35 No problem.
+39:40 So here I have asked based on this feature and this number I have divided the classes.
+39:48 So I could have asked,
+39:49 So I could have also asked, please please try to listen to me here.
+39:54 I could have also asked age greater than 80.
+40:00 I could ask this question as well at the start.
+40:03 Who has stopped me?
+40:06 Why I did not ask age is greater than 80?
+40:09 Why I asked age is greater than 70 only?
+40:13 Why I did not ask, age is greater than 70 only?
+40:17 Why I did not ask?
+40:18 I did not ask age is less than 50?
+40:20 Age is greater than 50.
+40:22 Why I did not ask that question at the start?
+40:25 I means model on.
+40:32 Because when I asked this question,
+40:35 age greater than 70, it was giving me
+40:39 better subsets.
+40:45 Other than
+40:48 any other number in age as well as any other question related to any other feature.
+40:56 This was the best criterion I could come up with, my model could come up with, to start with.
+41:03 And how did I decide this?
+41:06 How do I decide this?
+41:10 I decide based on these two factors.
+41:14 The information goes to
+41:17 the information gain and the index.
+41:20 Either you can use information gain or you can use
+41:23 the index.
+41:25 Now, the motivation is clear.
+41:27 Those who could not get initially,
+41:29 why we are trying to study.
+41:31 Okay.
+41:34 So let's go back to the slides now.
+41:47 Yes.
+42:17 So information gain tells you the usefulness of the splits.
+42:26 I'll take an example.
+42:29 So this is the formula of information gain.
+42:33 So those who know a bit of maths would have also heard this term called entropy.
+42:38 Have you heard this term called entropy?
+42:42 Have you heard this term called entropy?
+42:47 Disorderness.
+42:51 Yes.
+42:53 In chemistry, okay.
+42:56 Randomness here.
+42:58 So entropy is generally used to measure randomness in multiple subjects.
+43:04 This is a very old mathematical concept.
+43:08 So here also it is used for the same purpose.
+43:12 And you can calculate entropy and then you can use
+43:16 and then you can use this formula for information game and wherever you are getting the maximum information gain, you go for that split.
+43:25 I'll take an example and then you'll understand.
+43:28 Suppose as is a split of instance A is an attribute, SV is the subset of S,
+43:35 we represent an individual value that is attribute of A can take values, is a set of all possible
+43:46 values of Aden. So when I have not, I don't recognize what I have written here,
+43:52 but I'll take you further for this formula.
+43:55 So let me take an example.
+43:58 But before that, I think I should explain entropy, then you will understand what.
+44:02 Information again this.
+44:05 So entropy is a measure of uncertainty or impurity in the data set.
+44:09 So in dysentery entropy helps decide which features to split on by quantifference
+44:16 how group the mix, how mixed a group is.
+44:20 So what is the ultimate goal?
+44:22 Remember, the ultimate goal is to get a pure subset.
+44:25 So if you are getting a group which is not mixed,
+44:29 then I should be happy about it.
+44:31 I can stop there.
+44:33 And I have to take that attribute and that value in consideration
+44:39 that is giving me the pure subset.
+44:41 Okay?
+44:43 So the formula for intraments
+44:45 The formula for entropy is this PI log PI and the summation of all the elements.
+44:53 I is one element.
+44:54 So for all the elements, I have to calculate P.I.
+44:57 And finally, once I do the summation, I have to take the minus sign.
+45:00 So that will give me the entropy.
+45:03 So here, PI can be calculated by the proportion of the class I in set S.
+45:10 Suppose I have a two class classification.
+45:13 So, and I haven't tensel.
+45:15 seven samples are saying yes and three samples are saying no.
+45:20 So I have to just, so in this case what will happen?
+45:27 7 by 10 will 7 by 10 log 7 by 10 plus 3 by 10 log 3 by 10 will be my entropy.
+45:35 This class where I am having a split, I'm getting a split of 7 3, 3, 3
+45:41 are saying yes and 3 are saying no.
+45:44 If I can if I put into this formula, I will get entropy 7 by 10, log 7 by 10 plus 3 by 10.
+45:54 And finally I'll apply a minus sign out of it.
+45:57 So this will be the entropy for this particular subset.
+46:01 So let's take an example.
+46:03 Suppose this is a subset.
+46:07 AAA, B, B, B, B.
+46:11 These are your
+46:13 decision classes. Suppose you have to classify in two classes, A and B.
+46:19 And you have some 8 samples.
+46:21 And out of these 8 samples, 5 samples are saying B and 3 samples are saying A.
+46:33 I have done a classification. I have come up with a subset where 5 samples are saying B and 3 samples are saying A.
+46:41 So what will the entropy of this subset?
+46:45 I will use this formula 3 by 8 log 3 by 8 plus 5 by 8 log 5 by 8 and finally I'll apply a minus sign
+46:53 this one and then finally I'll get 0.954.
+46:58 So this is the entropy of this set x.
+47:02 Is this clear how to calculate entropy of a particular set set?
+47:10 or a particular subset?
+47:12 Okay.
+47:15 So now.
+47:20 I think not important.
+47:29 So now let's see how we can use entropy and information gain.
+47:34 Why I discussed about entropy?
+47:37 Because information gain is based on entropy.
+47:39 Based on entropy.
+47:40 So if you see this formula of information gain S, gain S.
+47:45 So it uses entropy, entropy of S, entropy of S,
+47:51 entropy of SV, divide by S.
+47:56 So this gives you an idea of how good a particular split is.
+48:02 So let's take an example. You'll understand that.
+48:07 Okay.
+48:08 So let's assume I have.
+48:09 some three features x y and z and i have a class to predict so i have two class classification
+48:17 either i will predict class one or i will predict class two and values are different uh features are also
+48:25 given x y z one so it would be either one or zero
+48:31 so what we have to eventually do is that we have to eventually come up with the decision boundaries
+48:37 based on information game.
+48:41 So let's try to split based on attribute x.
+48:50 So I'll say that if x is 1, then take left direction.
+48:58 If x is 0, then take right direction.
+49:03 So one thing that you should note here is that if I'm
+49:07 take x is 0 then initially how many samples I had here how many samples I had?
+49:16 How many samples I had?
+49:21 Four samples, yes. See this diagram.
+49:26 I have four samples.
+49:27 One, two, three, four.
+49:29 So initially I had four samples.
+49:32 Two of these samples were in class first and two of these samples.
+49:36 And two of these samples.
+49:37 for in class second.
+49:40 So if I split based on attribute x and I say if x is one, then you go in one direction.
+49:47 If x is zero, then go in one direction.
+49:50 In that case, if I use this formula of information gain,
+49:56 then I calculate the information gain for this child as well and this child as well.
+50:04 So information gain of parent is one.
+50:06 gain of parent is one.
+50:08 All the data is there.
+50:09 And the information gain of this child is this much.
+50:13 This much.
+50:15 And information gain of this child is this much.
+50:19 Okay.
+50:21 So this is how I have calculated.
+50:23 I have used the same formula that I have presented there.
+50:26 It is based on entropy.
+50:29 Now, if I split based on attribute y,
+50:35 then what happens?
+50:36 I just want to take a call here on which attribute should I start with.
+50:45 What is the first question should I ask if I want to classify?
+50:50 Okay.
+50:52 There is no first split that has occurred now.
+50:55 I am trying to identify on which basis I have to create the first split.
+51:01 Should I create the first split based on X?
+51:05 Should I create the first split based on X?
+51:06 based on Y or should I create a split based on Z?
+51:09 I have three options, three features I had, like age, gender, class, in the case of titating
+51:16 example that we took.
+51:18 So here also I have three options, XYZ, and now I have restrained the values of X and Y, Z.
+51:25 They can have binary values.
+51:26 So just to make things simple for you.
+51:30 So if I calculate, if I try to split based on Y, then what happens?
+51:36 Are you seeing if I take Y is equal to 1, then I'm going in this direction.
+51:43 And I'm getting both of these values as first.
+51:49 So all the first students are in one side and all the second students are
+51:55 or having second, they are on the other side.
+51:59 Let's assume these are the first or second class of students.
+52:05 So is this criterion better? And if you use the formula of gain, you will get,
+52:15 for child you will get 0, child 1 you will get 0 and child 1 you will get 0 and child 2 you will get 0.
+52:23 Now you tell me which one is better.
+52:29 Based on x or based on y.
+52:35 why? Because if I would have taken an initial call based on Y, then a clear boundary is existing.
+52:47 We can also check it with Z also.
+52:52 So with Z, you can say that you are getting a mixed result if you take it based on Z.
+53:01 So gain for a...
+53:04 your child will be 1 and each child 1 is 1 and each child 2 is 1.
+53:12 So you have seen all of these and why is giving you the perfect separation.
+53:22 So which means you have to ask a question on why.
+53:26 You don't have to ask any other questions because you are getting pure classes just after asking question on why.
+53:33 Okay?
+53:34 If you have, if you would have seen the calculation of information gain, in this case of why, each child is 0 and each child 0 is, each child, this for this child, it is 0, information gain and for this child the information gain is 0.
+53:53 So which means which information gain should be preferred?
+54:04 So if, suppose I have calculated information gain in all three x, y and z, can you compare them and choose?
+54:20 Because see, visually it is very easy to choose because you would see.
+54:24 It was a very small example.
+54:26 But if the example would be large, say you have some 10,000 samples or 1 lakh samples and say 20 features.
+54:33 Then based on the information gain, if I calculate information gain, then can you choose which split should I go for?
+54:46 Yes or no?
+54:53 Yes.
+54:54 So where it is near by 0, I'll choose that spread.
+54:58 Okay.
+55:01 Okay.
+55:03 Okay, so let's take a break of 10 minutes and we'll reconvene by 910.
+55:33 So we have seen that we have calculated information gain for parent, child, and then finally, and then finally, what happens is that we have calculated information gain for parent, child. And then finally, what happens is that we have to,
+56:03 come up with a metric.
+56:06 If that metric maximizes, then we have to choose the split and if that metric is less, then we have to ignore the split.
+56:14 So information gain is that metric.
+56:17 So let me take a example, mathematical example that I have created for you.
+56:21 So these are the five samples, okay?
+56:26 And then based on the outlook, I will decide whether I play tennis or not.
+56:32 or not. So if sample one says that if the outlook is sunny, then I'll play tennis.
+56:38 Sample 2 also says that output, that if the outlook is sunny, then I won't play tennis.
+56:45 Some samples say that if there is a rain, then I'll play, then some samples say that there's a rain, I won't play.
+56:51 If there's overcast, then some samples say that I'll play, play.
+56:55 So these are the five samples and based on which I have to decide that whether I'll play tennis or not.
+57:02 Okay? So what I will do, I will calculate the entropy of the parent.
+57:06 So how to calculate the entropy of the parents?
+57:09 Just look at the last column.
+57:13 How many of these samples are saying yes and how many of these samples are saying no?
+57:20 So three samples are saying no and two samples are saying yes.
+57:25 So 3 by 5, log 3 by 5 plus 2 by 5, log 2 by 5, log 2 by 5.
+57:31 and then I'll take a minus sign.
+57:34 So the entropy of the parent will be 0.971.
+57:38 To calculate information gain, I have to also calculate the entropy of the children after the split.
+57:47 So let's assume that I have created a split based on the outlook.
+57:53 So if Outlook is sunny, then there were 0 yes and 2 no.
+58:00 So entropy value will be, in this case, 0.
+58:07 So we have seen in the previous example, if all of these samples are going in one class,
+58:16 then what is the entropy?
+58:18 0.
+58:19 And we said that we have to prefer such kind of decisions, such kinds of splits.
+58:24 But how to measure them through information gain?
+58:28 Let's see here.
+58:29 here. So for sunny, the entropy is 0. For overcost, overcast, the entropy is again 0
+58:38 because you are getting pure splits. In the case of rain, I am getting entropy as 1.
+58:44 Because there is 1 no yes and 1 no. So is entropy 1 a good thing?
+58:53 Yes or no? No. Okay.
+58:58 So now let's calculate the weighted average entropy after this split if I take a split based on the outlook.
+59:06 So I have to take a weighted average of this.
+59:08 So weighted average says 0 entropy for 2 by 5.
+59:15 So which class this is?
+59:17 This one.
+59:19 Sunny.
+59:20 2 knows, 0 yes.
+59:23 So I am saying 2 by 5 is a split out of 5 samples 2.
+59:27 5 samples, 2 are going in this and the entropy is 0.
+59:32 Out of 5 samples, how many samples belong to overcast?
+59:37 1 sample. So that's why 1 by 5.
+59:41 How many samples belong to rain class?
+59:44 2 by 5.
+59:46 So I'm just saying how many samples belong to every class
+59:51 because I want to take a weighted average.
+59:53 If there are more samples belong to a particular class after the split,
+59:57 then I will give a higher weight to that particular branch, that particular subset.
+1:0:04 So this child is having 2x5 weight, this child is having 1 by 5 weight and this child is having 2 by 5 weight.
+1:0:13 Which child is this? This is sunny, this is overcast and this is a rain.
+1:0:17 And I have also multiplied their entropys.
+1:0:21 For sunny entropy is 0, for overcast entropy is 0 and for rain entropy is 1.
+1:0:27 And if I add them up, what I will get?
+1:0:31 Entropy, the weighted impropri of all the children, and which is 0.4.
+1:0:37 And how information gain is defined?
+1:0:41 Entropy of parent minus weighted entropy of all the children after the split.
+1:0:50 So I am getting 0.571 as my information gain.
+1:0:55 What is the ultimate goal?
+1:0:56 What is the ultimate goal?
+1:0:57 ultimate goal is to maximize the information gain.
+1:1:00 So if this particular split is giving you the information game of 0.571,
+1:1:05 some other split based on some other feature is giving you an information gain of say 0.8,
+1:1:11 then you have to choose that particular split.
+1:1:14 Okay?
+1:1:16 This information gain clear to all of you?
+1:1:27 I hope it should be very clear to you.
+1:1:29 I mean, this example was self-explanatory.
+1:1:34 So I have to choose the split that is giving me the maximum information gain.
+1:1:42 Maximum information gain will be the split generally, which is where you are getting some children with zero entropy.
+1:1:51 As we have seen, this is the one that was giving you.
+1:1:55 So if you calculate.
+1:1:56 information gain, what is the information gain? 1. In this case, here the information gain was 0.311. Here the information gain was 0.
+1:2:07 So if you are having entropy of children as 1, then information gain will be 0.
+1:2:13 So information, we have to maximize, we have to come up with the partition that is giving me the highest information gain.
+1:2:21 And this was the partition which was giving me the information gain of 1.
+1:2:25 So that's why I have chosen.
+1:2:26 why as my initial question are the first Dissian boundary.
+1:2:35 So I have just done this calculation and got 0.971. Okay. So let's go to another metric.
+1:2:55 which is called Gini Index.
+1:2:59 So Gini Index is relatively simple metric to understand information gain a bit complicated because of the log logarithmic unit.
+1:3:10 So log takes some time because see, you have to understand that you have to compare the information gain of thousands of splits because multiple splits were possible.
+1:3:24 10 features and all of these features are ranging from, say, 0 to 500.
+1:3:29 Then there could be multiple possibilities, multiple subsets that can be created based on the features and their values.
+1:3:35 So you should be able to calculate information gain very quickly.
+1:3:38 And because of this logarithmic term that is there in the case of information gain, it takes some time.
+1:3:44 Okay?
+1:3:45 So Gini index is a simplified version where there is no logarithmic term.
+1:3:52 It just says 1 minus.
+1:3:53 minus PI square.
+1:3:57 PI is the probability of belonging in one class.
+1:4:00 So for example, if we have a group of, if you have a group of people where all bought the product,
+1:4:07 then the genie index will be zero.
+1:4:09 So here it's opposed to information gain.
+1:4:12 You want it to maximize the information gain, but you try to minimize the genie index because
+1:4:17 Gini index is also called genie impurity.
+1:4:20 So if you are having a mix of a mix of.
+1:4:23 of 1 and 0, you will get a genie index of 0, which is bad.
+1:4:27 So you should target for zini index 0.
+1:4:30 So if you get a pure subset, you will get a gene index 0 for that.
+1:4:35 So,
+1:4:38 GD index can be, you can think that a gene index is behaving like entropy.
+1:4:45 So when you are getting pure subsets,
+1:4:48 in the case of information gain, what was the entropy?
+1:4:52 Intropy was.
+1:4:53 0. So here if you are getting pure subsets, the genie index will be 0.
+1:4:59 Okay.
+1:5:00 So now let's see how we will make decisions based on genie index.
+1:5:04 I'll take the same example that I have taken in the case of information gain.
+1:5:09 So this outlook and tennis example.
+1:5:14 So I will calculate the genie index of the parent.
+1:5:17 So 60%
+1:5:22 were in the same, were in the yes class, were in no class and 40% were in yes class.
+1:5:29 Remember that?
+1:5:30 So 0.6 was the probability that you will go in no class and 0.4 is the probability that you will not go in the no class.
+1:5:39 Which means you will go in the yes class.
+1:5:41 So yeah.
+1:5:43 So that's why I just put, there is no log terms.
+1:5:46 So 0.6 square plus 0.4 square and I'll do just 1 minus of it.
+1:5:51 So Gini index for parent will be 0.48.
+1:5:54 And if I take a split based on the outlook, I will calculate Gini index for all the subsets.
+1:6:02 Sunny subset, overcast subset and the rain subset because I have done my partitioning based on outlook.
+1:6:09 So for sunny subset, the genie index is 0 because it is a pure subset.
+1:6:13 Overcast, the Gini index is 0.
+1:6:15 and for rain, Gini index is 0.5.
+1:6:18 And then again I will take the same weighted average that I have taken in the case.
+1:6:20 average that I have taken in the case of information gain.
+1:6:23 2x5 into 0, 1 by 5 into 0.5 into 0.5 and I'll get a weighted average of 0.2.
+1:6:29 So I have to now calculate the reduction in Gini.
+1:6:32 So initial the genie was 0.48 and now with this subset I am getting 0.2.
+1:6:38 So the overall reduction is 0.28.
+1:6:42 So if I get huge reduction, I have to prefer that split where I'm getting a larger reduction in Gini.
+1:6:49 So if I'm using information gain, then I was looking for subsets where the information gain is maximum.
+1:6:56 If I am using Gini index, then I have to go for subset where the reduction in Gini index is huge.
+1:7:04 The Gini index of parent was, say, 0.8 and Gini index of child is 0.1.
+1:7:12 So reduction is 0.7.
+1:7:14 So this reduction is something that I have to maximize.
+1:7:17 So if I'm, so assume a scenario where,
+1:7:19 say rain was also a deciding factor and I was getting a Gini index of 0 for rain, which means for all two samples, I could decide if there is raining, then I won't go hurt.
+1:7:32 So in that case, the weighted genie index would be, how much?
+1:7:37 If rain was also a deciding factor?
+1:7:40 Waited Gini index?
+1:7:46 How much?
+1:7:48 How much?
+1:7:49 So in that case, I will get an even bigger reduction from 0.8 gd index of parent to 0.
+1:7:59 So the reduction is 0.8 now, 0.8 minus 0. So I will choose this split.
+1:8:05 Understood this? All of you?
+1:8:08 ZD index and information gain?
+1:8:16 Okay, perfect.
+1:8:19 So this I think you have already understood.
+1:8:23 So let's try to understand one more metric which is called pruning.
+1:8:27 So sometimes what happens is, as I'd already mentioned, that if decision free becomes really large, they have a lot of levels, they have a lot of layers.
+1:8:38 In that case, what can happen is that you can overfeit.
+1:8:41 We have discussed that.
+1:8:43 So what we can do is one thing we discuss that we can set up a boundary beforehand that, that
+1:8:49 Maximum depth should be 10, which means I cannot go beyond 10.
+1:8:54 Whatever happens, I have to take decisions in 10 questions or 9 questions.
+1:8:59 Okay?
+1:9:00 One criteria could be that if the samples, the size of samples are less than 5, then I won't take decisions on those.
+1:9:07 So in that case, automatically I will reduce branching and the size of tree will be less.
+1:9:14 So this is called pruning of the tree.
+1:9:18 of decision tree.
+1:9:20 So pruning can be of two type pre-pruning.
+1:9:22 So this is an example of pre-proning where you have defined the maximum depth or minimum number of samples.
+1:9:27 This is called pre-proning.
+1:9:29 Post-pruning is that you grow the full tree.
+1:9:33 You take decisions, you go grow the full tree.
+1:9:36 And once the training is complete, you have created a tree, then you prune it.
+1:9:41 Then you clip some branches out of this tree and then you use it for your prediction.
+1:9:47 So that is called a post-prone.
+1:9:48 Okay?
+1:9:50 So post-pruning, I think pre-pruning, I have already explained, the maximum depth,
+1:10:00 minimum number of samples, minimum samples per split, maximum features.
+1:10:04 So all of these can be criterion for pre-pruning.
+1:10:08 But for post-pruning, you have to understand what is the complexity of a particular tree that you have created after pruning.
+1:10:17 So suppose you have.
+1:10:18 want an inference in 0.5 seconds.
+1:10:21 Inference means you want to classify a certain sample in 0.5 second.
+1:10:27 And you have a large tree.
+1:10:29 So you will prune, you will try to see if I have, say, 10 layers,
+1:10:34 then I should be able to give answer in 0.5 seconds.
+1:10:39 So you will keep 10 layers in your model.
+1:10:42 So you decide based on the performance metric that you want.
+1:10:45 This is called post-prolion.
+1:10:47 Another concept that we should study here is called random forest.
+1:10:52 So random forest is a ensemble learning method.
+1:10:57 Ensemble learning method means I have to classify multiple,
+1:11:02 so I have to combine multiple classifiers and then come up with a single classifier.
+1:11:07 That's called ensemble.
+1:11:09 So random forest is an ensemble method that combines multiple decision trees.
+1:11:15 So sometimes what happens.
+1:11:16 So sometimes what happens is that you don't get correct decisions based on a single decision tree.
+1:11:21 So what you do, you train 100 decision trees and suppose,
+1:11:27 and then you try to take decision out of these hundred decision trees
+1:11:31 and say if 80 decision trees are saying that this is a cat,
+1:11:37 then you believe and then you classify that particular image as a cat.
+1:11:41 If 20 decision trees are saying that it is dog, you just ignore it.
+1:11:45 So.
+1:11:46 Now I'm just adding one more layer of security,
+1:11:49 one more layer of reliability.
+1:11:51 I am not relying on a single decision tree.
+1:11:54 I am relying on the output of multiple decision trees.
+1:11:57 Is that logic behind the random forest is clear?
+1:12:03 Yes?
+1:12:09 So should I train?
+1:12:12 Now the question is, a very logical question here is,
+1:12:15 here is should all the decision tree that I am creating, they should create the same decision boundaries?
+1:12:23 Should they create the same decision boundaries while training?
+1:12:28 No. If I create the same decision boundaries and if I train all of these decision tree on the same data set, then they will behave in the same fashion.
+1:12:44 then what is the point of training 10 or 50 DC entries?
+1:12:50 I can train one.
+1:12:52 So what I will do, I will do two things.
+1:12:54 One thing is I will train these decision trees on different portion of the dataset.
+1:12:59 I won't train it on the same dataset.
+1:13:01 So they will see different portions of the data set and based on that they will create their understanding.
+1:13:06 And since the data set is different in every DCN tree,
+1:13:12 the part of the data set is different.
+1:13:13 different data set is same but I have given different different parts to different different
+1:13:16 discrete.
+1:13:17 So what will happen is that they will create their own understanding.
+1:13:20 They will create their own decision boundaries based on different types of features.
+1:13:25 Which means you will get, if you are turning 10 different
+1:13:29 decision trees on subset of data sets,
+1:13:34 subset of your initial data set, then you will get 10 different perspective
+1:13:40 of classification.
+1:13:42 So if you want to classify a certain object, you will give the same object to all the 10 decision trees.
+1:13:49 And you will ask, what do you think?
+1:13:52 You think that this is a cat or you think this is a dog?
+1:13:55 So based on their understanding at the training time, they will classify it either as a dog or a cat.
+1:14:02 And suppose out of these 10 decision trees, 8 are saying that this is a dog and 2 are saying this is a cat.
+1:14:09 So what you will say?
+1:14:10 You will say that it is a dog.
+1:14:11 that it is a dog. So I am adding one more layer of reliability. Nothing else.
+1:14:17 Everything remains the same.
+1:14:19 Is this clear? The logic of a random forest?
+1:14:23 Yeah, each decision tree will have different genie index.
+1:14:26 Yeah, every layer they will have different genie index and entropy.
+1:14:29 Because they are taking decisions in a different way.
+1:14:32 They are seeing, they are choosing different features and their values at every level.
+1:14:37 Their depth will also be different if you are not frowning them.
+1:14:40 if you are not pruning then.
+1:14:42 Okay.
+1:14:45 Okay, perfect.
+1:14:47 So I think...
+1:14:49 So this helps improve the accuracy.
+1:14:52 And this is an example.
+1:14:53 You can see that I have trained three different DCN trees.
+1:14:57 And so this approach is called begging,
+1:15:01 where you go for majority voting.
+1:15:05 So two DCN trees are saying that this object belongs to class A
+1:15:08 and one DCN trees saying that object
+1:15:10 belongs to class B. So I will choose the one which is I'll do the voting and I'll choose the majority voting and I will classify as class A.
+1:15:18 This technique is called bagging using in simple methods.
+1:15:25 So I have already I think explained you the steps.
+1:15:31 Key features of random forest is that that handles missing data well.
+1:15:35 This also tells you which features are most important.
+1:15:39 most important. So if particular decision tree, say three dysentries are taking
+1:15:43 decision based on that feature, then of course that feature is more important as compared
+1:15:49 to other features. So this works well with the big and complex data sets because you get
+1:15:57 multiple perspectives. But remember, since you are training 10 models, 10 separate models,
+1:16:02 it takes time. Okay. But one good thing is that if you are
+1:16:09 using multiple codes then since all of these are independent to each other, they can be
+1:16:15 trained in parallel on different different course of your CPU or GPU. They can be trained in
+1:16:20 parallel because there is no dependency among these models. They are taking different
+1:16:26 data sets for training. So they can also be used for classification and regulation as
+1:16:32 these entries. The good thing about random forest is that they reduce overfitting.
+1:16:39 because you are seeing multiple perspectives so chances that you will reduce work hitting.
+1:16:46 They handle missing data and larger feature sets. They are more accurate and robust than single test
+1:16:52 set and then they can estimate the feature importance.
+1:17:03 This I think I have already explained. Yeah, so for one decision three it is more interpretable.
+1:17:09 If there are multiple DC entry, then, I mean, it is very hard to manually see, go and see every
+1:17:16 decision and analyze how they are taking decision. So interpretability is reduced as compared
+1:17:23 to a single DC entry, but again, you are getting better up. This is the same thing that I
+1:17:29 have already explained, comparison table. So decision tree is a foundation of many ML algorithms,
+1:17:38 random forests ensemble for accuracy and robustness. If you want to use pruning and ensembles,
+1:17:44 you can avoid overfitting. With random forest, you can also get the importance of the features,
+1:17:51 and that helps you take better decisions. This is a key takeaway of this session. Now I will go to
+1:17:57 the coding part quickly and try to explain you the coding behind it. See, the main idea is
+1:18:04 to make you understand how decisionry works and where should we use it.
+1:18:08 So coding is again a two liner. So you will just use those two lines and call these libraries and do the classification for you.
+1:18:16 But there are some important things that I want to show you in the code part.
+1:18:20 That will make this exhaustive.
+1:18:38 so.
+1:18:52 Is my screen visible all of you?
+1:19:08 Okay, so let's start with the coding session.
+1:19:18 Again, I'm just telling you that these are the three three, these are the line that this, these are the two lines that are useful here.
+1:19:32 I am importing here. I am importing decision tree classifier with SK learned. I'm also
+1:19:38 importing random forest classifier which comes under skel n dot and sample so i'm also
+1:19:45 i'll give you a demo of classifier as well as well as regressor so regression and classification
+1:19:51 both examples i have covered so that you get idea of you get flavors of both of these
+1:19:59 so just import these
+1:20:08 So I'm creating a synthetic data set here, which is having 500 samples.
+1:20:19 So out of and it is having five samples based on which I have to decide three classes.
+1:20:23 So there are three output classes, 012.
+1:20:28 And three features are really informative, which means three features are the ones which are
+1:20:33 actually impacting the outcome.
+1:20:36 There are no redundant features.
+1:20:37 and there are three classes as I've mentioned. So this is synthetic data set I'm
+1:20:43 creating here. And let's do the train test split. 20% goes for test and 80% goes for training.
+1:20:51 Now let's call these two classical lines, DC entry classifier. And just passed, they just pass
+1:21:02 this X train and Y train on this dysentry fitted.
+1:21:07 same as you are doing in the case of linear regression, logistic regression, SVM, similar two lines. Only this function changes.
+1:21:16 And then once I have done the classification through this decisionary, let's try to evaluate the accuracy on the test data set.
+1:21:30 So the accuracy without pruning, I'm getting is 83%.
+1:21:35 Okay.
+1:21:37 I can also calculate F1 score and all these things if I do some summary of accuracy
+1:21:41 because it is a classification.
+1:21:44 Let's try to visualize this dysentery.
+1:21:46 I have visualized this.
+1:21:52 This is what the designary looks like.
+1:21:58 This might be looking very hazy to you.
+1:22:01 So what we can do is just to make you understand things.
+1:22:05 I am pruning this.
+1:22:06 pruning this. Okay? So just to train, just to prune, it is also very easy. When I was not pruning, I was just calling this function. I was letting the model to decide how many levels should be there. I was just saying that decisionary classifier and then I choose in a random state to start with. Here, I will also pass one more parameter called maximum depth.
+1:22:36 same decency classifier function, but I have defined maximum depth is equal to three.
+1:22:41 Same fitting, same classification.
+1:22:47 You would have seen the accuracy is reduced.
+1:22:49 Earlier the accuracy was 83%.
+1:22:52 Now the accuracy is 76% which is very natural here.
+1:22:58 No?
+1:23:00 I am pruning some of the branches. It means I will lose some information.
+1:23:05 But what I will.
+1:23:06 get in return what I will get in return. I will get a better interpretability.
+1:23:13 I will get, I will be able to make quick decisions on my unknown data.
+1:23:19 If I pass some parameter, if I pass you some sample, you should be able to quickly decide because there are few branches.
+1:23:27 Only three branches in fact?
+1:23:31 Any other benefit?
+1:23:35 Yeah, less storage, there's time.
+1:23:39 All of these.
+1:23:41 So now I can visualize this and you'll understand also.
+1:23:47 See, the library has given you a lot of nice stuff here.
+1:23:52 So this plot tree function I'm using.
+1:23:55 I'm just passing this tree.
+1:23:58 And I'm passing the name of the features for the better clarifications.
+1:24:04 So you use.
+1:24:05 see now how model has classified a model asked questions. So the first question is
+1:24:14 model is, model is asking feature 1 is less than 0.117. So if feature 1 is less than 0.117,
+1:24:23 then the model has created a boundary. You can go in left and you can go in right. If feature
+1:24:30 1 is less than 1.1.7, it is true then it will go in this direction, otherwise going to go in this direction. So how many
+1:24:35 samples I have initially 400 and genie index of this parent is 0.66.
+1:24:46 So if I would have taken the split based on this feature one, then this is the genie I'm getting.
+1:24:54 And now what is this?
+1:24:57 Values 136, 135, 129, which means out of these 400 samples that I initially started with,
+1:25:04 started with 136 belongs to class A, 135 belongs to class B, and 129 belongs to class C.
+1:25:12 So this was the distribution of samples when we started initially.
+1:25:19 So initially, remember, I had some 400 samples.
+1:25:23 Oh, I had 500.
+1:25:34 Oh, sorry. Yeah, 400 came for training and it went for testing.
+1:25:41 Yeah. So I had some 400 for 10 training. So this was the distribution. And then I have taken a call that if feature 1 is 0.117, then go in this direction. Then I'm checking based on feature 4. If feature 4 is less than 0.033, then go in this direction.
+1:26:04 otherwise going in this direction.
+1:26:06 The moment I have taken this, this route, now the class distribution looks like this, 31, 68, 120.
+1:26:15 Again, I have taken a call and again I have taken a call.
+1:26:18 So you can see that even at the leaves, where you have to actually take the decision,
+1:26:25 I am not getting the pure subsets because I have pruned my dataset, a pruned my tree.
+1:26:33 But still, I can live with it.
+1:26:34 So I can, if I suppose, if I get a sample, then I can move around the tree and whichever
+1:26:44 leave I reach at, I will just take decision based on that leaf.
+1:26:54 So I have given the explanation that here.
+1:26:59 So firstly, the model is asking if the feature one is this, then this, then.
+1:27:03 then you go around it.
+1:27:12 So coloring is also like this.
+1:27:14 If you are getting orange boxes, then class 0 is dominating.
+1:27:18 If you're getting blue boxes, then class 1 is dominating.
+1:27:21 So all of this is provided by library.
+1:27:23 So there are three classes, three different colors you are getting.
+1:27:27 Red, this, this, uh, orange, green and blue.
+1:27:33 So that's how you are getting colors.
+1:27:36 If you are getting more in one class, then that color will dominate.
+1:27:41 Just to give you a better idea.
+1:27:44 Let's pick one random sample and see what happens.
+1:27:48 So this is one random sample.
+1:27:51 Sample index 7.
+1:27:53 Actual level was 2 and directed by the T by beta by 3 is also true.
+1:27:59 And these are the feature values of the sample.
+1:28:02 So you can see that how the decisions would have been taken.
+1:28:10 Because the decision is already created and you know the feature value of this particular sample.
+1:28:15 So all of these feature values will be compared against the questions of the decision tree.
+1:28:21 Like the first question is feature 1 is less than 0.117 then go in this direction.
+1:28:26 So you can analyze now for this particular sample which
+1:28:32 path I would have taken and which leave I would have reached to and I have taken my decision.
+1:28:43 So you can easily interpret the result. That is the most important thing about decision.
+1:28:49 That's what I have explained you here.
+1:28:52 It is clear. I mean, code is clear to you, all of you?
+1:29:02 Okay, good.
+1:29:09 Now let's take an example of random forest.
+1:29:15 So for random forest, I have taken an example of titanic data set.
+1:29:20 So you already are familiar with this data set, multiple features.
+1:29:27 And ultimately I have to predict survived or not survived.
+1:29:31 alive or not alive, sorry.
+1:29:33 This is the one.
+1:29:35 So what I'm doing, I am taking these features.
+1:29:39 I want to make the same based on these features.
+1:29:41 P-class, sex, age, this was sibling and this was parge, pair, embarked.
+1:29:47 So these are the features that I will put in my training data set.
+1:29:51 And firstly what I'm doing, I'm handling the missing values.
+1:29:55 I'm dropping any null values, any rows with the null values.
+1:29:59 I'm converting the categorical.
+1:30:00 converting the categorical columns to numerical columns, which were the two categorical columns here, sex and imbar.
+1:30:07 So again, this I have done.
+1:30:10 And then I'm creating the input features and the output features.
+1:30:16 Output features just survived.
+1:30:19 And input features are the ones which I have taken here.
+1:30:25 Now let's do a train test split.
+1:30:29 of 8020.
+1:30:31 Now let's train the random forest classifier.
+1:30:35 Again, two lines of code.
+1:30:38 Earlier I was using decision-free as a function.
+1:30:43 Decision-free classifier.
+1:30:45 Now I will just say random forest classifier.
+1:30:50 Nothing else.
+1:30:51 But one parameter that you should look here is
+1:30:54 number of estimators.
+1:30:56 So number of estimators is a hundred, which means I am taking
+1:30:59 100 separate decision trees.
+1:31:01 100 separate decision trees.
+1:31:04 Okay?
+1:31:06 And I'm fitting it.
+1:31:09 And then I'm finally predicting.
+1:31:14 And let's see what accuracy. Accuracy is 0.76% is accuracy.
+1:31:21 One important thing that you should understand and you should always remember.
+1:31:28 always remember is this method. Whenever you have created a random forest, this method
+1:31:35 comes with the library which is feature importances. So this method gives you the feature
+1:31:44 importance and this comes with random forest that you have created. Just you have to do
+1:31:54 random forest dot feature importances. And you can play
+1:31:58 this. What is the importance of every feature? So which feature is really
+1:32:05 important? Age, fair, sex male, P class, in this order. So age is the most important feature
+1:32:15 that the model has thought of. This is the one that model has decided. Okay, this is the most
+1:32:23 important features based on the hundred trees and multiple decision boundaries that I have
+1:32:28 I have realized that this is the most important feature.
+1:32:33 So this is a unique benefit that you get with random forest where you can get the importance
+1:32:38 of the features.
+1:32:40 Now we have seen an example of random forest with classification.
+1:32:43 Now let's see one more example of regression because I have mentioned initially that you can
+1:32:48 both with random forest and dysentery, you can do classification and regression both.
+1:32:52 So let's take one more example that we have already seen before.
+1:32:55 It is house price prediction.
+1:32:57 It was a regression problem.
+1:32:58 I hope you remember that. So we were to predict the prices of a plot based on multiple features like latitude,
+1:33:07 longitude, total number of bedrooms, what is the size, medium income of the person.
+1:33:14 So I have dropped this ocean proximity. I don't want to use that in my decision making.
+1:33:25 So I have created my input feature.
+1:33:27 feature in my training data set with these features and my final prediction is
+1:33:37 median house value is this one. I have to predict the house value and this is the equation problem.
+1:33:44 So I have to predict this house value as a number. So let's do train class, train test,
+1:33:49 spread. And train random forest regressor. So now the syntax changes. Earlier I was using.
+1:33:57 random forest classifier as a syntax. Now I will choose I will say random forest
+1:34:08 regression because I'm doing a regression problem here. I have to identify how many
+1:34:16 decision trees I want to create. Here I'm mentioning hundred. This is a customizable number.
+1:34:22 You can create 50,000 depends upon your processing and how much time
+1:34:26 how much accuracy is important to you and how much computation is important to you.
+1:34:31 So that's why this knob is given to you. You can just train it. It will take some time.
+1:34:38 Regression problem, it takes more time than the classification problem.
+1:34:42 This is training. Training is going on for 100 decency entries.
+1:34:56 It's complete now. Now I can make predictions.
+1:35:06 Since it is a regression, so I won't calculate accuracy. I will calculate mean square error and R2 score.
+1:35:14 So mean square error is this much and R2 score is 0.810. So since R2 score is close to 1, so I'll
+1:35:21 say that my regression is working nice.
+1:35:26 So, but this mean square error is huge. So you might think that it is,
+1:35:33 um, model is not working working code. So what we can do, we can take some, let's see some actual
+1:35:39 values and predictions and see whether they are making. So I have to randomly taken some
+1:35:44 10 values first 10 values. So actual value was 47,700 and my predicted value was 50,000.
+1:35:51 So if you see my actual values are very close to my predicted values, which means the model is for
+1:35:56 going okay. So we can also visualize the actual and predicted values like this, like
+1:36:05 this. So on XXs, I have actual prices and Yvexas I have predicted prices. So if I get,
+1:36:14 if I get all the values cluster around this line, this line, then I'll say that prediction is good.
+1:36:21 But you can see that for low price, how they?
+1:36:26 the prediction is nice, but as the prices are increased, the predictions are quite spread.
+1:36:35 So for higher price houses, the predictions are not that grade. So what this problem is called,
+1:36:42 remember when you're studying about migration problems? The error is not same. Error is increasing.
+1:36:56 if you are increasing the values. So if you're increasing the non, no, non, it is not a problem.
+1:37:06 Some other issue, that furnace type of curve in this, in this, in the residual,
+1:37:14 hetrocedasticity, yeah, hetero sedasticity is the word, and that is the problem here.
+1:37:21 If you increase the price, then errors are increasing.
+1:37:26 Okay, hetero sedasticity. Yeah, okay. So with this, I'll stop, and I'm open to questions.
+1:37:56 Goala, please see if people are having questions.
+1:38:05 Sure, we can take some quick questions.
+1:38:06 Yes, sir, we can take a couple of questions now.
+1:38:10 Yeah.
+1:38:10 Students, in case if you have any questions, kindly raise your hands so that we can take a quick question.
+1:38:16 So that we can take a quick question.
+1:38:26 I repeat in case if you have any questions, kindly put it to sir, please raise your hands.
+1:38:36 Some students are asking questions on the chat. I mean, I request them to please raise your hand.
+1:38:42 Instead of putting in the chat, kindly, you know, raise your hand.
+1:38:56 Sir, would you like to take these questions in the chat books?
+1:39:12 Yeah, yeah, do that.
+1:39:14 So is pruning a faster method or training the tree again with the new parameters?
+1:39:18 So pruning is always faster.
+1:39:20 So if you, because you have already trained your model, and now you're, you
+1:39:26 you just want to clip some of these branches and create a classifier for you.
+1:39:36 So training is faster with pruning.
+1:39:39 So please explain again the maximum depth and minimum sample trees.
+1:39:43 So maximum depth means while creating the tree, model will create the tree for you.
+1:39:47 That is the goal of the model.
+1:39:49 So while creating a tree, you can specify that, okay, don't create more than five levels.
+1:39:56 go beyond five depth. So that is something that you are telling the model that don't create
+1:40:03 more than five depths. I want quick response. So whatever you can do in five players, you do. You take
+1:40:09 whatever decisions in five days. So that is a stopping criteria. Now that stopping criteria could
+1:40:13 be minimum sample reach. So if, as I've shown you in the in the code part, that once you create
+1:40:19 decision tree, you will also get how many samples you are getting in one branch. Because samples are
+1:40:24 keep on dividing once you take decisions. So you may reach to a point where only three
+1:40:28 samples are left. So you don't want to take the same based on three samples. You want to create a new
+1:40:33 branch based on three samples. So that's something that we can do to stop to make the tree become
+1:40:45 too large. This I have already explained. So I mean, again explaining this.
+1:40:54 Gen.
+1:40:55 How calculation is done?
+1:40:57 So I will share the slides with you today only.
+1:40:59 I'm just sharing with Kowela.
+1:41:02 Example is very clearly written.
+1:41:04 Please calculate the index for yourself.
+1:41:08 Simply works for regression.
+1:41:10 Yeah, so this is again a good question.
+1:41:13 Somebody is asking how dysentery works for regression as they are giving yes and no.
+1:41:18 So in the case of regression, it won't give yes or no.
+1:41:22 It will give you some numbers.
+1:41:23 and you have to again calculate the
+1:41:27 gene index and information gain.
+1:41:32 Wherever you are getting high information gain or
+1:41:35 use reduction in the index, you have to take those boundaries.
+1:41:39 Yeah.
+1:41:41 So I think no other questions.
+1:41:45 Yes, yes, it looks like there are no other questions.
+1:41:49 We can use linear polynomial regression after using this entry.
+1:41:52 So why do you?
+1:41:53 want to use linear polynomial regression.
+1:41:54 So if you have already taken decisions,
+1:41:56 you have to choose one method there,
+1:42:00 unless you are not using an ensemble method.
+1:42:02 So you have to choose one, then just trust that method.
+1:42:07 And that's why I explained you which method to choose.
+1:42:10 If you have large data set, then which method should choose,
+1:42:13 small data set, which methods you should use.
+1:42:15 So we had a separate class on that.
+1:42:19 Okay.
